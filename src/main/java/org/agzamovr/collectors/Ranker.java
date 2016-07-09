@@ -22,6 +22,10 @@ public class Ranker<T> {
         this.denseRank = denseRank;
     }
 
+    public Ranker(Comparator<T> comparator, boolean denseRank) {
+        this(comparator, Integer::compareTo, denseRank);
+    }
+
     public Ranker(Comparator<T> comparator, Comparator<Integer> rankOrder) {
         this(comparator, rankOrder, false);
     }

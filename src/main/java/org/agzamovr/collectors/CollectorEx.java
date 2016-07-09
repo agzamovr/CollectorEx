@@ -16,6 +16,12 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>>
+    Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRank() {
+        Ranker<T> ranker = new Ranker<>(nullsLast(Comparator.<T>naturalOrder()), true);
+        return rank(ranker);
+    }
+
+    public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> rankNullsFirst() {
         return rank(nullsFirst(Comparator.<T>naturalOrder()));
     }

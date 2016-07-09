@@ -1,0 +1,33 @@
+group 'org.agzamovr.collectors'
+version '0.1-SNAPSHOT'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.1.6"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'findbugs'
+apply plugin: 'info.solidsoft.pitest'
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.assertj:assertj-core:3.5.1'
+    testCompile 'org.mockito:mockito-core:2.0.82-beta'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14'
+}

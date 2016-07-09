@@ -68,13 +68,18 @@ public class Sum<T> {
                                   List<T> list,
                                   Collector<Double, A, R> downstream) {
         list.sort(comparator);
-        double sum = 0;
+        double sum = 0.0;
+        double compensation = 0.0;
         Supplier<A> downstreamSupplier = downstream.supplier();
         Function<A, R> finisher = downstream.finisher();
         BiConsumer<A, Double> downstreamAccumulator = downstream.accumulator();
         A container = downstreamSupplier.get();
         for (T item : list) {
-            sum = sum + mapper.applyAsDouble(item);
+            double val = mapper.applyAsDouble(item);
+            double y = val - compensation;
+            double t = sum + y;
+            compensation = (t - sum) - y;
+            sum = t;
             downstreamAccumulator.accept(container, sum);
         }
         return finisher.apply(container);

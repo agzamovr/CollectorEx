@@ -17,8 +17,8 @@ public class CollectorEx {
 
     public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRank() {
-        Ranker<T> ranker = new Ranker<>(nullsLast(Comparator.<T>naturalOrder()), true);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(nullsLast(Comparator.<T>naturalOrder()), true);
+        return rank(rank);
     }
 
     public static <T extends Comparable<? super T>>
@@ -28,8 +28,8 @@ public class CollectorEx {
 
     public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankNullsFirst() {
-        Ranker<T> ranker = new Ranker<>(nullsFirst(Comparator.<T>naturalOrder()), true);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(nullsFirst(Comparator.<T>naturalOrder()), true);
+        return rank(rank);
     }
 
     public static <T extends Comparable<? super T>>
@@ -44,50 +44,50 @@ public class CollectorEx {
 
     public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankReversed() {
-        Ranker<T> ranker = new Ranker<>(nullsLast(Comparator.<T>naturalOrder().reversed()), true);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(nullsLast(Comparator.<T>naturalOrder().reversed()), true);
+        return rank(rank);
     }
 
     public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankReversedNullsFirst() {
-        Ranker<T> ranker = new Ranker<>(nullsFirst(Comparator.<T>naturalOrder().reversed()), true);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(nullsFirst(Comparator.<T>naturalOrder().reversed()), true);
+        return rank(rank);
     }
 
     public static <T>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator) {
-        Ranker<T> ranker = new Ranker<>(comparator);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(comparator);
+        return rank(rank);
     }
 
     public static <T>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator,
                                                             Comparator<Integer> rankOrder) {
-        Ranker<T> ranker = new Ranker<>(comparator, rankOrder);
-        return rank(ranker);
+        Rank<T> rank = new Rank<>(comparator, rankOrder);
+        return rank(rank);
     }
 
     public static <T extends Comparable<? super T>, A, R>
     Collector<T, List<T>, SortedMap<Integer, R>> rank(Collector<? super T, A, R> downstream) {
-        Ranker<T> ranker = new Ranker<>(Comparator.<T>nullsLast(naturalOrder()));
-        return rank(ranker, downstream);
+        Rank<T> rank = new Rank<>(Comparator.<T>nullsLast(naturalOrder()));
+        return rank(rank, downstream);
     }
 
     public static <T>
-    Collector<T, List<T>, SortedMap<Integer, List<T>>> rank(Ranker<T> ranker) {
+    Collector<T, List<T>, SortedMap<Integer, List<T>>> rank(Rank<T> rank) {
         return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::combiner,
-                ranker::rank);
+                rank::rank);
     }
 
     public static <T, R>
-    Collector<T, List<T>, SortedMap<Integer, R>> rank(Ranker<T> ranker,
+    Collector<T, List<T>, SortedMap<Integer, R>> rank(Rank<T> rank,
                                                       Collector<? super T, ?, R> downstream) {
         return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::combiner,
-                (list) -> ranker.rank(list, downstream));
+                (list) -> rank.rank(list, downstream));
     }
 
     private static <T> List<T> combiner(List<T> left, List<T> right) {

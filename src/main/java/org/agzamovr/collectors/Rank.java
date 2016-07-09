@@ -9,12 +9,12 @@ import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.toList;
 
-public class Ranker<T> {
+public class Rank<T> {
     private final Comparator<Integer> rankOrder;
     private final Comparator<T> comparator;
     private final boolean denseRank;
 
-    public Ranker(Comparator<T> comparator, Comparator<Integer> rankOrder, boolean denseRank) {
+    public Rank(Comparator<T> comparator, Comparator<Integer> rankOrder, boolean denseRank) {
         Objects.requireNonNull(rankOrder, "Rank comparator cannot be null");
         Objects.requireNonNull(comparator, "Comparator cannot be null");
         this.comparator = comparator;
@@ -22,15 +22,15 @@ public class Ranker<T> {
         this.denseRank = denseRank;
     }
 
-    public Ranker(Comparator<T> comparator, boolean denseRank) {
+    public Rank(Comparator<T> comparator, boolean denseRank) {
         this(comparator, Integer::compareTo, denseRank);
     }
 
-    public Ranker(Comparator<T> comparator, Comparator<Integer> rankOrder) {
+    public Rank(Comparator<T> comparator, Comparator<Integer> rankOrder) {
         this(comparator, rankOrder, false);
     }
 
-    public Ranker(Comparator<T> comparator) {
+    public Rank(Comparator<T> comparator) {
         this(comparator, Integer::compareTo, false);
     }
 

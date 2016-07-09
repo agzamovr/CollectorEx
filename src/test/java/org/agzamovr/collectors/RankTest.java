@@ -16,7 +16,7 @@ import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RankerTest {
+public class RankTest {
     private Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, singletonList(1));
     private Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, singletonList(2));
     private Entry<Integer, List<Integer>> entry3 = new SimpleEntry<>(3, singletonList(3));
@@ -24,40 +24,40 @@ public class RankerTest {
 
     @Test
     public void testRankWithEmptyList() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Collections.emptyList();
 
-        SortedMap<Integer, List<Integer>> result = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> result = rank.rank(list);
 
         assertThat(result.isEmpty());
     }
 
     @Test
     public void testRankWithSortedIntegerList() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
 
     @Test
     public void testRankWithReverseSortedIntegerList() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
 
     @Test
     public void testRankWithDuplicates() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 2));
@@ -68,10 +68,10 @@ public class RankerTest {
 
     @Test
     public void testDenseRankWithDuplicates() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare, Integer::compare, true);
+        Rank<Integer> rank = new Rank<>(Integer::compare, Integer::compare, true);
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, asList(2, 2));
@@ -84,19 +84,19 @@ public class RankerTest {
     public void testRankOrder() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         Comparator<Integer> intComparator = Integer::compare;
-        Ranker<Integer> ranker = new Ranker<>(intComparator, intComparator.reversed());
+        Rank<Integer> rank = new Rank<>(intComparator, intComparator.reversed());
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         assertThat(rankedMap).containsExactly(entry4, entry3, entry2, entry1);
     }
 
     @Test
     public void testRankWithCustomComparator() {
-        Ranker<Integer> ranker = new Ranker<>(this::evenOddComparator);
+        Rank<Integer> rank = new Rank<>(this::evenOddComparator);
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = ranker.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 3));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 4));
@@ -112,10 +112,10 @@ public class RankerTest {
 
     @Test
     public void testRankWithSetCollector() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = ranker.rank(list, toSet());
+        SortedMap<Integer, Set<Integer>> rankedMap = rank.rank(list, toSet());
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(2));
@@ -126,10 +126,10 @@ public class RankerTest {
 
     @Test
     public void testRankWithMapperCollector() {
-        Ranker<Integer> ranker = new Ranker<>(Integer::compare);
+        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = ranker.rank(list, mapping(i -> i * i, toSet()));
+        SortedMap<Integer, Set<Integer>> rankedMap = rank.rank(list, mapping(i -> i * i, toSet()));
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(4));
@@ -145,11 +145,11 @@ public class RankerTest {
                 .thenComparing(Bid::getShippingDate, nullsLast(naturalOrder()))
                 .thenComparing(Bid::getExperience, nullsLast(Comparator.<Integer>naturalOrder().reversed()))
                 .thenComparing(Bid::getSentDate);
-        Ranker<Bid> ranker = new Ranker<>(bidComparator);
+        Rank<Bid> rank = new Rank<>(bidComparator);
 
         List<Bid> bids = getBids();
 
-        SortedMap<Integer, List<Bid>> rankedMap = ranker.rank(bids);
+        SortedMap<Integer, List<Bid>> rankedMap = rank.rank(bids);
 
         assertThat(rankedMap.size()).isEqualTo(bids.size());
         List<Bid> actualBid = rankedMap.get(1);

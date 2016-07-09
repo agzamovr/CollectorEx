@@ -27,6 +27,12 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>>
+    Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankNullsFirst() {
+        Ranker<T> ranker = new Ranker<>(nullsFirst(Comparator.<T>naturalOrder()), true);
+        return rank(ranker);
+    }
+
+    public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> rankReversed() {
         return rank(nullsLast(Comparator.<T>naturalOrder().reversed()));
     }
@@ -34,6 +40,18 @@ public class CollectorEx {
     public static <T extends Comparable<? super T>>
     Collector<T, List<T>, SortedMap<Integer, List<T>>> rankReversedNullsFirst() {
         return rank(nullsFirst(Comparator.<T>naturalOrder().reversed()));
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankReversed() {
+        Ranker<T> ranker = new Ranker<>(nullsLast(Comparator.<T>naturalOrder().reversed()), true);
+        return rank(ranker);
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, List<T>, SortedMap<Integer, List<T>>> denseRankReversedNullsFirst() {
+        Ranker<T> ranker = new Ranker<>(nullsFirst(Comparator.<T>naturalOrder().reversed()), true);
+        return rank(ranker);
     }
 
     public static <T>
@@ -52,21 +70,6 @@ public class CollectorEx {
     public static <T extends Comparable<? super T>, A, R>
     Collector<T, List<T>, SortedMap<Integer, R>> rank(Collector<? super T, A, R> downstream) {
         Ranker<T> ranker = new Ranker<>(Comparator.<T>nullsLast(naturalOrder()));
-        return rank(ranker, downstream);
-    }
-
-    public static <T, A, R>
-    Collector<T, List<T>, SortedMap<Integer, R>> rank(Comparator<T> comparator,
-                                                      Collector<? super T, A, R> downstream) {
-        Ranker<T> ranker = new Ranker<>(comparator);
-        return rank(ranker, downstream);
-    }
-
-    public static <T, A, R>
-    Collector<T, List<T>, SortedMap<Integer, R>> rank(Comparator<Integer> rankOrder,
-                                                      Comparator<T> comparator,
-                                                      Collector<? super T, A, R> downstream) {
-        Ranker<T> ranker = new Ranker<>(comparator, rankOrder);
         return rank(ranker, downstream);
     }
 

@@ -23,7 +23,7 @@ public class RankerTest {
     private Entry<Integer, List<Integer>> entry4 = new SimpleEntry<>(4, singletonList(4));
 
     @Test
-    public void testRankEmptyList() {
+    public void testRankWithEmptyList() {
         Ranker<Integer> ranker = new Ranker<>(Integer::compare);
         List<Integer> list = Collections.emptyList();
 
@@ -33,7 +33,7 @@ public class RankerTest {
     }
 
     @Test
-    public void testRankSimpleSortedIntegerList() {
+    public void testRankWithSortedIntegerList() {
         Ranker<Integer> ranker = new Ranker<>(Integer::compare);
         List<Integer> list = asList(1, 2, 3, 4);
 
@@ -43,7 +43,7 @@ public class RankerTest {
     }
 
     @Test
-    public void testRankSimpleReverseSortedIntegerList() {
+    public void testRankWithReverseSortedIntegerList() {
         Ranker<Integer> ranker = new Ranker<>(Integer::compare);
         List<Integer> list = asList(4, 3, 2, 1);
 

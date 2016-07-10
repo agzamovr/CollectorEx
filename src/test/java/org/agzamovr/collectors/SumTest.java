@@ -15,7 +15,7 @@ public class SumTest {
 
     @Test
     public void testSummingEmptyList() {
-        Sum<Integer> sum = new Sum<>(Integer::compare);
+        Sum sum = new Sum();
         List<Integer> list = emptyList();
 
         List<Integer> result = sum.summingInt(i -> i, list);
@@ -25,7 +25,7 @@ public class SumTest {
 
     @Test
     public void testSummingInt() {
-        Sum<Integer> sum = new Sum<>(Integer::compare);
+        Sum sum = new Sum();
         List<Integer> list = asList(1, 2, 3);
 
         List<Integer> result = sum.summingInt(i -> i, list);
@@ -35,7 +35,7 @@ public class SumTest {
 
     @Test
     public void testSummingIntWithSetCollector() {
-        Sum<Integer> sum = new Sum<>(Integer::compare);
+        Sum sum = new Sum();
         List<Integer> list = asList(1, 2, 3);
 
         Set<Integer> result = sum.summingInt(i -> i, list, toSet());
@@ -45,7 +45,7 @@ public class SumTest {
 
     @Test
     public void testSummingLong() {
-        Sum<Long> sum = new Sum<>(Long::compare);
+        Sum sum = new Sum();
         List<Long> list = asList(1L, 2L, 3L);
 
         List<Long> result = sum.summingLong(i -> i, list);
@@ -55,7 +55,7 @@ public class SumTest {
 
     @Test
     public void testSummingLongWithSetCollector() {
-        Sum<Long> sum = new Sum<>(Long::compare);
+        Sum sum = new Sum();
         List<Long> list = asList(1L, 2L, 3L);
 
         Set<Long> result = sum.summingLong(i -> i, list, toSet());
@@ -65,7 +65,7 @@ public class SumTest {
 
     @Test
     public void testSummingDouble() {
-        Sum<Double> sum = new Sum<>(Double::compare);
+        Sum sum = new Sum();
         List<Double> list = asList(1.0, 2.1, 3.1);
 
         List<Double> result = sum.summingDouble(d -> d, list);
@@ -75,7 +75,7 @@ public class SumTest {
 
     @Test
     public void testSummingDoubleWithSetCollector() {
-        Sum<Double> sum = new Sum<>(Double::compare);
+        Sum sum = new Sum();
         List<Double> list = asList(1.0, 2.1, 3.1);
 
         Set<Double> result = sum.summingDouble(i -> i, list, toSet());
@@ -85,7 +85,7 @@ public class SumTest {
 
     @Test
     public void testSummingBigDecimal() {
-        Sum<BigDecimal> sum = new Sum<>(BigDecimal::compareTo);
+        Sum sum = new Sum();
         List<BigDecimal> list = asList(BigDecimal.ONE, new BigDecimal("2"), new BigDecimal("3"));
 
         List<BigDecimal> result = sum.summingBigDecimal(d -> d, list);
@@ -95,7 +95,7 @@ public class SumTest {
 
     @Test
     public void testSummingBigDecimalWithSetCollector() {
-        Sum<BigDecimal> sum = new Sum<>(BigDecimal::compareTo);
+        Sum sum = new Sum();
         List<BigDecimal> list = asList(BigDecimal.ONE, new BigDecimal("2"), new BigDecimal("3"));
 
         Set<BigDecimal> result = sum.summingBigDecimal(i -> i, list, toSet());

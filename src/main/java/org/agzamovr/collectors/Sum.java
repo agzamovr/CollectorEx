@@ -7,24 +7,35 @@ import java.util.Objects;
 import java.util.function.*;
 import java.util.stream.Collector;
 
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
-public class Sum<T> {
-    private final Comparator<T> comparator;
+class Sum {
+    public <T extends Comparable<? super T>>
+    List<Integer> summingInt(ToIntFunction<? super T> mapper,
+                             List<T> list) {
+        return summingInt(nullsLast(naturalOrder()), mapper, list);
+    }
 
-    public Sum(Comparator<T> comparator) {
+    public <T extends Comparable<? super T>, R>
+    R summingInt(ToIntFunction<? super T> mapper,
+                 List<T> list,
+                 Collector<Integer, ?, R> downstream) {
+        return summingInt(nullsLast(naturalOrder()), mapper, list, downstream);
+    }
+
+    public <T> List<Integer> summingInt(Comparator<T> comparator,
+                                        ToIntFunction<? super T> mapper,
+                                        List<T> list) {
+        return summingInt(comparator, mapper, list, toList());
+    }
+
+    public <T, A, R> R summingInt(Comparator<T> comparator,
+                                  ToIntFunction<? super T> mapper,
+                                  List<T> list,
+                                  Collector<Integer, A, R> downstream) {
         Objects.requireNonNull(comparator, "Comparator cannot be null");
-        this.comparator = comparator;
-    }
-
-    public List<Integer> summingInt(ToIntFunction<? super T> mapper,
-                                    List<T> list) {
-        return summingInt(mapper, list, toList());
-    }
-
-    public <A, R> R summingInt(ToIntFunction<? super T> mapper,
-                               List<T> list,
-                               Collector<Integer, A, R> downstream) {
         list.sort(comparator);
         int sum = 0;
         Supplier<A> downstreamSupplier = downstream.supplier();
@@ -38,14 +49,30 @@ public class Sum<T> {
         return finisher.apply(container);
     }
 
-    public List<Long> summingLong(ToLongFunction<? super T> mapper,
-                                  List<T> list) {
-        return summingLong(mapper, list, toList());
+    public <T extends Comparable<? super T>>
+    List<Long> summingLong(ToLongFunction<? super T> mapper,
+                           List<T> list) {
+        return summingLong(nullsLast(naturalOrder()), mapper, list);
     }
 
-    public <A, R> R summingLong(ToLongFunction<? super T> mapper,
-                                List<T> list,
-                                Collector<Long, A, R> downstream) {
+    public <T extends Comparable<? super T>, R>
+    R summingLong(ToLongFunction<? super T> mapper,
+                  List<T> list,
+                  Collector<Long, ?, R> downstream) {
+        return summingLong(nullsLast(naturalOrder()), mapper, list, downstream);
+    }
+
+    public <T> List<Long> summingLong(Comparator<T> comparator,
+                                      ToLongFunction<? super T> mapper,
+                                      List<T> list) {
+        return summingLong(comparator, mapper, list, toList());
+    }
+
+    public <T, A, R> R summingLong(Comparator<T> comparator,
+                                   ToLongFunction<? super T> mapper,
+                                   List<T> list,
+                                   Collector<Long, A, R> downstream) {
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
         list.sort(comparator);
         long sum = 0;
         Supplier<A> downstreamSupplier = downstream.supplier();
@@ -59,14 +86,31 @@ public class Sum<T> {
         return finisher.apply(container);
     }
 
-    public List<Double> summingDouble(ToDoubleFunction<? super T> mapper,
-                                      List<T> list) {
-        return summingDouble(mapper, list, toList());
+    public <T extends Comparable<? super T>>
+    List<Double> summingDouble(ToDoubleFunction<? super T> mapper,
+                               List<T> list) {
+        return summingDouble(nullsLast(naturalOrder()), mapper, list);
     }
 
-    public <A, R> R summingDouble(ToDoubleFunction<? super T> mapper,
-                                  List<T> list,
-                                  Collector<Double, A, R> downstream) {
+    public <T extends Comparable<? super T>, R>
+    R summingDouble(ToDoubleFunction<? super T> mapper,
+                    List<T> list,
+                    Collector<Double, ?, R> downstream) {
+        return summingDouble(nullsLast(naturalOrder()), mapper, list, downstream);
+    }
+
+    public <T> List<Double> summingDouble(Comparator<T> comparator,
+                                          ToDoubleFunction<? super T> mapper,
+                                          List<T> list) {
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
+        return summingDouble(comparator, mapper, list, toList());
+    }
+
+    public <T, A, R> R summingDouble(Comparator<T> comparator,
+                                     ToDoubleFunction<? super T> mapper,
+                                     List<T> list,
+                                     Collector<Double, A, R> downstream) {
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
         list.sort(comparator);
         double sum = 0.0;
         double compensation = 0.0;
@@ -85,14 +129,31 @@ public class Sum<T> {
         return finisher.apply(container);
     }
 
-    public List<BigDecimal> summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                          List<T> list) {
-        return summingBigDecimal(mapper, list, toList());
+    public <T extends Comparable<? super T>>
+    List<BigDecimal> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                       List<T> list) {
+        return summingBigDecimal(nullsLast(naturalOrder()), mapper, list);
     }
 
-    public <A, R> R summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                      List<T> list,
-                                      Collector<BigDecimal, A, R> downstream) {
+    public <T extends Comparable<? super T>, R>
+    R summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                        List<T> list,
+                        Collector<BigDecimal, ?, R> downstream) {
+        return summingBigDecimal(nullsLast(naturalOrder()), mapper, list, downstream);
+    }
+
+    public <T> List<BigDecimal> summingBigDecimal(Comparator<T> comparator,
+                                                  Function<? super T, BigDecimal> mapper,
+                                                  List<T> list) {
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
+        return summingBigDecimal(comparator, mapper, list, toList());
+    }
+
+    public <T, A, R> R summingBigDecimal(Comparator<T> comparator,
+                                         Function<? super T, BigDecimal> mapper,
+                                         List<T> list,
+                                         Collector<BigDecimal, A, R> downstream) {
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
         list.sort(comparator);
         BigDecimal sum = BigDecimal.ZERO;
         Supplier<A> downstreamSupplier = downstream.supplier();

@@ -192,7 +192,7 @@ public class CollectorExTest {
     @Test
     public void testGroupingByCollectorWithRankCollector() {
         List<Integer> list = asList(1, 2, 3, 4);
-        Map<Integer, SortedMap<Integer, List<Integer>>> denseRankedMap = list.stream()
+        Map<Integer, SortedMap<Integer, List<Integer>>> rankedMap = list.stream()
                 .collect(groupingBy(i -> i % 2, CollectorEx.rank()));
         SortedMap<Integer, List<Integer>> odds = new TreeMap<>();
         odds.put(1, singletonList(1));
@@ -202,6 +202,6 @@ public class CollectorExTest {
         evens.put(2, singletonList(4));
         Entry<Integer, SortedMap<Integer, List<Integer>>> entry1 = new SimpleEntry<>(0, evens);
         Entry<Integer, SortedMap<Integer, List<Integer>>> entry2 = new SimpleEntry<>(1, odds);
-        assertThat(denseRankedMap).containsExactly(entry1, entry2);
+        assertThat(rankedMap).containsExactly(entry1, entry2);
     }
 }

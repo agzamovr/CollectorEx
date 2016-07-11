@@ -154,12 +154,76 @@ public class RankingCollectorTest {
     }
 
     @Test
+    public void testMapObjToDenseRank() {
+        List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
+
+        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToDenseRank());
+
+        Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 4);
+        Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 3);
+        Entry<Integer, Integer> entry3 = new SimpleEntry<>(-3, 2);
+        Entry<Integer, Integer> entry4 = new SimpleEntry<>(-4, 1);
+
+        assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
+    }
+
+    @Test
+    public void testMapObjToDenseRankWithComparator() {
+        List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
+        Comparator<Integer> integerComparator = Integer::compareTo;
+        Map<Integer, Integer> rankedMap = list.stream()
+                .collect(RANKING_COLLECTOR.mapObjToDenseRank(integerComparator.reversed()));
+
+        Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 1);
+        Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 2);
+        Entry<Integer, Integer> entry3 = new SimpleEntry<>(-3, 3);
+        Entry<Integer, Integer> entry4 = new SimpleEntry<>(-4, 4);
+
+        assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
+    }
+
+    @Test
+    public void testMapObjToRank() {
+        List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
+
+        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank());
+
+        Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 7);
+        Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 5);
+        Entry<Integer, Integer> entry3 = new SimpleEntry<>(-3, 3);
+        Entry<Integer, Integer> entry4 = new SimpleEntry<>(-4, 1);
+
+        assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
+    }
+
+    @Test
+    public void testMapObjToRankWithComparator() {
+        List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
+        Comparator<Integer> integerComparator = Integer::compareTo;
+
+        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank(integerComparator.reversed()));
+
+        Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 1);
+        Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 3);
+        Entry<Integer, Integer> entry3 = new SimpleEntry<>(-3, 5);
+        Entry<Integer, Integer> entry4 = new SimpleEntry<>(-4, 7);
+
+        assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
+    }
+
+    @Test
+    public void testMapObjToRankWithComplexComparator() {
+        Comparator<Bid> bidComparator = buildComplexComparator();
+        List<Bid> bids = Bid.getBids();
+
+        Map<Bid, Integer> rankedMaps = bids.stream().collect(RANKING_COLLECTOR.mapObjToDenseRank(bidComparator));
+
+        rankedMaps.forEach((bid, rank) -> assertThat(bid.num).isEqualTo(rank));
+    }
+
+    @Test
     public void testComplexComparator() {
-        Comparator<Bid> bidComparator = Comparator
-                .comparing(Bid::getPrice, naturalOrder())
-                .thenComparing(Bid::getShippingDate, nullsLast(naturalOrder()))
-                .thenComparing(Bid::getExperience, nullsLast(Comparator.<Integer>naturalOrder().reversed()))
-                .thenComparing(Bid::getSentDate);
+        Comparator<Bid> bidComparator = buildComplexComparator();
 
         List<Bid> bids = Bid.getBids();
 
@@ -195,5 +259,13 @@ public class RankingCollectorTest {
         actualBid = rankedMap.get(7);
         assertThat(actualBid.size()).isEqualTo(1);
         assertThat(actualBid.get(0).num).isEqualTo(7);
+    }
+
+    private Comparator<Bid> buildComplexComparator() {
+        return Comparator
+                .comparing(Bid::getPrice, naturalOrder())
+                .thenComparing(Bid::getShippingDate, nullsLast(naturalOrder()))
+                .thenComparing(Bid::getExperience, nullsLast(Comparator.<Integer>naturalOrder().reversed()))
+                .thenComparing(Bid::getSentDate);
     }
 }

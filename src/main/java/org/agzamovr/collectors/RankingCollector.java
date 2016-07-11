@@ -9,6 +9,7 @@ import java.util.stream.Collector;
 
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 class RankingCollector {
     static final RankingCollector RANKING_COLLECTOR = new RankingCollector();
@@ -21,11 +22,12 @@ class RankingCollector {
         Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T, A, R> SortedMap<Integer, R> rankFinisher(List<T> list,
-                                                 Comparator<T> comparator,
-                                                 Comparator<Integer> rankOrder,
-                                                 boolean denseRank,
-                                                 Collector<? super T, A, R> downstream) {
+    <T, A, R>
+    SortedMap<Integer, R> rankFinisher(List<T> list,
+                                       Comparator<T> comparator,
+                                       Comparator<Integer> rankOrder,
+                                       boolean denseRank,
+                                       Collector<? super T, A, R> downstream) {
         validateInput(comparator, rankOrder, downstream);
         list.sort(comparator);
         SortedMap<Integer, R> map = new TreeMap<>(rankOrder);
@@ -52,6 +54,16 @@ class RankingCollector {
         return map;
     }
 
+    <T>
+    Map<T, Integer> mapObjToRankFinisher(List<T> list,
+                                         Comparator<T> comparator,
+                                         boolean denseRank) {
+        SortedMap<Integer, Set<T>> rankedMap = rankFinisher(list, comparator, Integer::compareTo, denseRank, toSet());
+        Map<T, Integer> mapObjToRank = new HashMap<>();
+        rankedMap.forEach((rank, items) -> items.forEach((item) -> mapObjToRank.put(item, rank)));
+        return mapObjToRank;
+    }
+
     <T extends Comparable<? super T>>
     Collector<T, ?, SortedMap<Integer, List<T>>> denseRank() {
         return denseRank(nullsLast(Comparator.<T>naturalOrder()));
@@ -65,6 +77,12 @@ class RankingCollector {
     <T extends Comparable<? super T>, R>
     Collector<T, ?, SortedMap<Integer, R>> denseRank(Collector<? super T, ?, R> downstream) {
         return rank(nullsLast(Comparator.<T>naturalOrder()), Integer::compareTo, true, downstream);
+    }
+
+    <T>
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
+                                                           Comparator<Integer> rankOrder) {
+        return rank(comparator, rankOrder, true, toList());
     }
 
     <T extends Comparable<? super T>>
@@ -83,12 +101,6 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
-                                                           Comparator<Integer> rankOrder) {
-        return rank(comparator, rankOrder, true, toList());
-    }
-
-    <T>
     Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator,
                                                       Comparator<Integer> rankOrder) {
         return rank(comparator, rankOrder, false, toList());
@@ -103,5 +115,34 @@ class RankingCollector {
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> rankFinisher(list, comparator, rankOrder, denseRank, downstream));
+    }
+
+    <T extends Comparable<? super T>>
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank() {
+        return mapObjToRank(nullsLast(Comparator.<T>naturalOrder()), true);
+    }
+
+    <T>
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<T> comparator) {
+        return mapObjToRank(comparator, true);
+    }
+
+    <T extends Comparable<? super T>>
+    Collector<T, ?, Map<T, Integer>> mapObjToRank() {
+        return mapObjToRank(nullsLast(Comparator.<T>naturalOrder()), false);
+    }
+
+    <T>
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator) {
+        return mapObjToRank(comparator, false);
+    }
+
+    <T>
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator,
+                                                  boolean denseRank) {
+        return Collector.of((Supplier<List<T>>) ArrayList::new,
+                List::add,
+                CollectorEx::listCombiner,
+                (list) -> mapObjToRankFinisher(list, comparator, denseRank));
     }
 }

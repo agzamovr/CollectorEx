@@ -3,6 +3,7 @@ package org.agzamovr.collectors;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
@@ -60,6 +61,26 @@ public class CollectorEx {
                                                 boolean denseRank,
                                                 Collector<? super T, ?, R> downstream) {
         return RANKING_COLLECTOR.rank(comparator, rankOrder, denseRank, downstream);
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank() {
+        return RANKING_COLLECTOR.mapObjToDenseRank();
+    }
+
+    public static <T>
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<T> comparator) {
+        return RANKING_COLLECTOR.mapObjToDenseRank(comparator);
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, ?, Map<T, Integer>> mapObjToRank() {
+        return RANKING_COLLECTOR.mapObjToRank();
+    }
+
+    public static <T>
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator) {
+        return RANKING_COLLECTOR.mapObjToRank(comparator);
     }
 
     public static <T extends Comparable<? super T>>

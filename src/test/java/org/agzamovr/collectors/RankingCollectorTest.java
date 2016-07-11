@@ -2,21 +2,20 @@ package org.agzamovr.collectors;
 
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.*;
+import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RankTest {
+public class RankingCollectorTest {
     private Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, singletonList(1));
     private Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, singletonList(2));
     private Entry<Integer, List<Integer>> entry3 = new SimpleEntry<>(3, singletonList(3));
@@ -24,40 +23,40 @@ public class RankTest {
 
     @Test
     public void testRankWithEmptyList() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Collections.emptyList();
 
-        SortedMap<Integer, List<Integer>> result = rank.rank(list);
+        SortedMap<Integer, List<Integer>> result = list.stream().collect
+                (RANKING_COLLECTOR.rank());
 
         assertThat(result.isEmpty());
     }
 
     @Test
     public void testRankWithSortedIntegerList() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank());
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
 
     @Test
     public void testRankWithReverseSortedIntegerList() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank());
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
 
     @Test
     public void testRankWithDuplicates() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank());
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 2));
@@ -68,10 +67,10 @@ public class RankTest {
 
     @Test
     public void testDenseRankWithDuplicates() {
-        Rank<Integer> rank = new Rank<>(Integer::compare, Integer::compare, true);
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.denseRank());
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, asList(2, 2));
@@ -84,19 +83,19 @@ public class RankTest {
     public void testRankOrder() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         Comparator<Integer> intComparator = Integer::compare;
-        Rank<Integer> rank = new Rank<>(intComparator, intComparator.reversed());
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank(intComparator, intComparator.reversed()));
 
         assertThat(rankedMap).containsExactly(entry4, entry3, entry2, entry1);
     }
 
     @Test
     public void testRankWithCustomComparator() {
-        Rank<Integer> rank = new Rank<>(this::evenOddComparator);
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = rank.rank(list);
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank(this::evenOddComparator));
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 3));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 4));
@@ -112,10 +111,10 @@ public class RankTest {
 
     @Test
     public void testRankWithSetCollector() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = rank.rank(list, toSet());
+        SortedMap<Integer, Set<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank(toSet()));
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(2));
@@ -126,10 +125,10 @@ public class RankTest {
 
     @Test
     public void testRankWithMapperCollector() {
-        Rank<Integer> rank = new Rank<>(Integer::compare);
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = rank.rank(list, mapping(i -> i * i, toSet()));
+        SortedMap<Integer, Set<Integer>> rankedMap = list.stream().collect
+                (RANKING_COLLECTOR.rank(mapping(i -> i * i, toSet())));
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(4));
@@ -139,17 +138,33 @@ public class RankTest {
     }
 
     @Test
+    public void testGroupingByCollectorWithRankCollector() {
+        List<Integer> list = asList(1, 2, 3, 4);
+        Map<Integer, SortedMap<Integer, List<Integer>>> rankedMap = list.stream()
+                .collect(groupingBy(i -> i % 2, RANKING_COLLECTOR.rank()));
+        SortedMap<Integer, List<Integer>> odds = new TreeMap<>();
+        odds.put(1, singletonList(1));
+        odds.put(2, singletonList(3));
+        SortedMap<Integer, List<Integer>> evens = new TreeMap<>();
+        evens.put(1, singletonList(2));
+        evens.put(2, singletonList(4));
+        Entry<Integer, SortedMap<Integer, List<Integer>>> entry1 = new SimpleEntry<>(0, evens);
+        Entry<Integer, SortedMap<Integer, List<Integer>>> entry2 = new SimpleEntry<>(1, odds);
+        assertThat(rankedMap).containsExactly(entry1, entry2);
+    }
+
+    @Test
     public void testComplexComparator() {
         Comparator<Bid> bidComparator = Comparator
                 .comparing(Bid::getPrice, naturalOrder())
                 .thenComparing(Bid::getShippingDate, nullsLast(naturalOrder()))
                 .thenComparing(Bid::getExperience, nullsLast(Comparator.<Integer>naturalOrder().reversed()))
                 .thenComparing(Bid::getSentDate);
-        Rank<Bid> rank = new Rank<>(bidComparator);
 
-        List<Bid> bids = getBids();
+        List<Bid> bids = Bid.getBids();
 
-        SortedMap<Integer, List<Bid>> rankedMap = rank.rank(bids);
+        SortedMap<Integer, List<Bid>> rankedMap = bids.stream()
+                .collect(RANKING_COLLECTOR.rank(bidComparator));
 
         assertThat(rankedMap.size()).isEqualTo(bids.size());
         List<Bid> actualBid = rankedMap.get(1);
@@ -181,19 +196,4 @@ public class RankTest {
         assertThat(actualBid.size()).isEqualTo(1);
         assertThat(actualBid.get(0).num).isEqualTo(7);
     }
-
-    List<Bid> getBids() {
-        Date past = new Date(currentTimeMillis() - 1000);
-        Date present = new Date();
-        Date future = new Date(currentTimeMillis() + 1000);
-        Bid bid1 = new Bid(1, BigDecimal.ONE, future, null, present);
-        Bid bid2 = new Bid(2, new BigDecimal("2"), present, null, present);
-        Bid bid3 = new Bid(3, new BigDecimal("2"), future, null, present);
-        Bid bid4 = new Bid(4, new BigDecimal("3"), future, 2, present);
-        Bid bid5 = new Bid(5, new BigDecimal("3"), future, 1, present);
-        Bid bid6 = new Bid(6, new BigDecimal("4"), future, null, past);
-        Bid bid7 = new Bid(7, new BigDecimal("4"), future, null, present);
-        return asList(bid1, bid2, bid3, bid4, bid5, bid6, bid7);
-    }
-
 }

@@ -3,6 +3,10 @@ package org.agzamovr.collectors;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
 
 class Bid {
     final int num;
@@ -66,5 +70,19 @@ class Bid {
         return "num: " + num + ", price: " + price +
                 ", shipping date: " + simpleDateFormat.format(shippingDate) +
                 ", sent date: " + simpleDateFormat.format(sentDate);
+    }
+
+    static List<Bid> getBids() {
+        Date past = new Date(currentTimeMillis() - 1000);
+        Date present = new Date();
+        Date future = new Date(currentTimeMillis() + 1000);
+        Bid bid1 = new Bid(1, BigDecimal.ONE, future, null, present);
+        Bid bid2 = new Bid(2, new BigDecimal("2"), present, null, present);
+        Bid bid3 = new Bid(3, new BigDecimal("2"), future, null, present);
+        Bid bid4 = new Bid(4, new BigDecimal("3"), future, 2, present);
+        Bid bid5 = new Bid(5, new BigDecimal("3"), future, 1, present);
+        Bid bid6 = new Bid(6, new BigDecimal("4"), future, null, past);
+        Bid bid7 = new Bid(7, new BigDecimal("4"), future, null, present);
+        return asList(bid1, bid2, bid3, bid4, bid5, bid6, bid7);
     }
 }

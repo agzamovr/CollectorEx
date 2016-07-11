@@ -31,7 +31,13 @@ public class CollectorEx {
 
     public static <T extends Comparable<? super T>, R>
     Collector<T, ?, SortedMap<Integer, R>> denseRank(Collector<T, ?, R> downstream) {
-        return RANKING_COLLECTOR.rank(downstream);
+        return RANKING_COLLECTOR.denseRank(downstream);
+    }
+
+    public static <T>
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
+                                                           Comparator<Integer> rankOrder) {
+        return RANKING_COLLECTOR.denseRank(comparator, rankOrder);
     }
 
     public static <T extends Comparable<? super T>>

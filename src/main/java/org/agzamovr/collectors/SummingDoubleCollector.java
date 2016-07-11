@@ -24,10 +24,10 @@ class SummingDoubleCollector {
         Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T, A, R> R summingDouble(ToDoubleFunction<? super T> mapper,
-                              Comparator<T> comparator,
-                              List<T> list,
-                              Collector<Double, A, R> downstream) {
+    <T, A, R> R summingDoubleFinisher(ToDoubleFunction<? super T> mapper,
+                                      Comparator<T> comparator,
+                                      List<T> list,
+                                      Collector<Double, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         double sum = 0.0;
@@ -71,6 +71,6 @@ class SummingDoubleCollector {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> summingDouble(mapper, comparator, list, downstream));
+                (list) -> summingDoubleFinisher(mapper, comparator, list, downstream));
     }
 }

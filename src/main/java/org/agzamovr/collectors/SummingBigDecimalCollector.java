@@ -24,10 +24,10 @@ class SummingBigDecimalCollector {
         Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T, A, R> R summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                  Comparator<T> comparator,
-                                  List<T> list,
-                                  Collector<BigDecimal, A, R> downstream) {
+    <T, A, R> R summingBigDecimalFinisher(Function<? super T, BigDecimal> mapper,
+                                          Comparator<T> comparator,
+                                          List<T> list,
+                                          Collector<BigDecimal, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         BigDecimal sum = BigDecimal.ZERO;
@@ -67,6 +67,6 @@ class SummingBigDecimalCollector {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(mapper, comparator, list, downstream));
+                (list) -> sum.summingBigDecimalFinisher(mapper, comparator, list, downstream));
     }
 }

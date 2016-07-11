@@ -24,10 +24,10 @@ class SummingIntCollector {
         Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T, A, R> R summingInt(ToIntFunction<? super T> mapper,
-                           Comparator<T> comparator,
-                           List<T> list,
-                           Collector<Integer, A, R> downstream) {
+    <T, A, R> R summingIntFinisher(ToIntFunction<? super T> mapper,
+                                   Comparator<T> comparator,
+                                   List<T> list,
+                                   Collector<Integer, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         int sum = 0;
@@ -66,6 +66,6 @@ class SummingIntCollector {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> summingInt(mapper, comparator, list, downstream));
+                (list) -> summingIntFinisher(mapper, comparator, list, downstream));
     }
 }

@@ -24,10 +24,10 @@ class SummingLongCollector {
         Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T, A, R> R summingLong(ToLongFunction<? super T> mapper,
-                            Comparator<T> comparator,
-                            List<T> list,
-                            Collector<Long, A, R> downstream) {
+    <T, A, R> R summingLongFinisher(ToLongFunction<? super T> mapper,
+                                    Comparator<T> comparator,
+                                    List<T> list,
+                                    Collector<Long, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         long sum = 0;
@@ -66,6 +66,6 @@ class SummingLongCollector {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> summingLong(mapper, comparator, list, downstream));
+                (list) -> summingLongFinisher(mapper, comparator, list, downstream));
     }
 }

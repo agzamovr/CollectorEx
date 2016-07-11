@@ -16,7 +16,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingEmptyList() {
         List<Double> list = emptyList();
 
-        List<Double> result = SUMMING_DOUBLE_COLLECTOR.summingDouble(i -> i, list);
+        List<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d));
 
         assertThat(result.isEmpty());
     }
@@ -25,7 +25,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingDouble() {
         List<Double> list = asList(1.0, 2.1, 3.1);
 
-        List<Double> result = SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d, list);
+        List<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d));
 
         assertThat(result).containsExactly(1.0, 3.1, 6.2);
     }
@@ -34,7 +34,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingDoubleWithSetCollector() {
         List<Double> list = asList(1.0, 2.1, 3.1);
 
-        Set<Double> result = SUMMING_DOUBLE_COLLECTOR.summingDouble(i -> i, list, toSet());
+        Set<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d, toSet()));
 
         assertThat(result).containsAll(asList(1.0, 3.1, 6.2));
     }

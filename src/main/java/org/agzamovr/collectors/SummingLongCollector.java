@@ -10,37 +10,25 @@ import java.util.function.Supplier;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
-import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
 class SummingLongCollector {
     static final SummingLongCollector SUMMING_LONG_COLLECTOR = new SummingLongCollector();
 
-    <T extends Comparable<? super T>>
-    List<Long> summingLong(ToLongFunction<? super T> mapper,
-                           List<T> list) {
-        return summingLong(nullsLast(naturalOrder()), mapper, list);
-    }
-
-    <T extends Comparable<? super T>, R>
-    R summingLong(ToLongFunction<? super T> mapper,
-                  List<T> list,
-                  Collector<Long, ?, R> downstream) {
-        return summingLong(nullsLast(naturalOrder()), mapper, list, downstream);
-    }
-
-    <T> List<Long> summingLong(Comparator<T> comparator,
-                                      ToLongFunction<? super T> mapper,
-                                      List<T> list) {
-        return summingLong(comparator, mapper, list, toList());
-    }
-
-    <T, A, R> R summingLong(Comparator<T> comparator,
-                                   ToLongFunction<? super T> mapper,
-                                   List<T> list,
-                                   Collector<Long, A, R> downstream) {
+    private void validateInput(ToLongFunction<?> mapper,
+                               Comparator<?> comparator,
+                               Collector<?, ?, ?> downstream) {
+        Objects.requireNonNull(mapper, "Mapper cannot be null");
         Objects.requireNonNull(comparator, "Comparator cannot be null");
+        Objects.requireNonNull(downstream, "Downstream collector cannot be null");
+    }
+
+    <T, A, R> R summingLong(ToLongFunction<? super T> mapper,
+                            Comparator<T> comparator,
+                            List<T> list,
+                            Collector<Long, A, R> downstream) {
+        validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         long sum = 0;
         Supplier<A> downstreamSupplier = downstream.supplier();
@@ -56,41 +44,28 @@ class SummingLongCollector {
 
     <T extends Comparable<? super T>>
     Collector<T, ?, List<Long>> summingLong(ToLongFunction<? super T> mapper) {
-        SummingLongCollector sum = new SummingLongCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingLong(mapper, list));
+        return summingLong(mapper, nullsLast(Comparator.<T>naturalOrder()));
     }
 
     <T extends Comparable<? super T>, R>
     Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
                                    Collector<Long, ?, R> downstream) {
-        SummingLongCollector sum = new SummingLongCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingLong(mapper, list, downstream));
+        return summingLong(mapper, nullsLast(Comparator.<T>naturalOrder()), downstream);
     }
 
     <T>
-    Collector<T, ?, List<Long>> summingLong(Comparator<T> comparator,
-                                            ToLongFunction<? super T> mapper) {
-        SummingLongCollector sum = new SummingLongCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingLong(comparator, mapper, list));
+    Collector<T, ?, List<Long>> summingLong(ToLongFunction<? super T> mapper,
+                                            Comparator<T> comparator) {
+        return summingLong(mapper, comparator, toList());
     }
 
     <T, R>
-    Collector<T, ?, R> summingLong(Comparator<T> comparator,
-                                   ToLongFunction<? super T> mapper,
+    Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
+                                   Comparator<T> comparator,
                                    Collector<Long, ?, R> downstream) {
-        SummingLongCollector sum = new SummingLongCollector();
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> sum.summingLong(comparator, mapper, list, downstream));
+                (list) -> summingLong(mapper, comparator, list, downstream));
     }
 }

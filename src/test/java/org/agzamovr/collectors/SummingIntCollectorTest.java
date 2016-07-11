@@ -17,7 +17,7 @@ public class SummingIntCollectorTest {
     public void testSummingEmptyList() {
         List<Integer> list = emptyList();
 
-        List<Integer> result = SUMMING_INT_COLLECTOR.summingInt(i -> i, list);
+        List<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i));
 
         assertThat(result.isEmpty());
     }
@@ -26,7 +26,7 @@ public class SummingIntCollectorTest {
     public void testSummingInt() {
         List<Integer> list = asList(1, 2, 3);
 
-        List<Integer> result = SUMMING_INT_COLLECTOR.summingInt(i -> i, list);
+        List<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i));
 
         assertThat(result).containsExactly(1, 3, 6);
     }
@@ -35,7 +35,7 @@ public class SummingIntCollectorTest {
     public void testSummingIntWithSetCollector() {
         List<Integer> list = asList(1, 2, 3);
 
-        Set<Integer> result = SUMMING_INT_COLLECTOR.summingInt(i -> i, list, toSet());
+        Set<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i, toSet()));
 
         assertThat(result).containsExactly(1, 3, 6);
     }

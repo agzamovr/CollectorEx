@@ -17,7 +17,7 @@ public class SummingBigDecimalCollectorTest {
     public void testSummingEmptyList() {
         List<BigDecimal> list = emptyList();
 
-        List<BigDecimal> result = SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(i -> i, list);
+        List<BigDecimal> result = list.stream().collect(SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(bd -> bd));
 
         assertThat(result.isEmpty());
     }
@@ -26,7 +26,7 @@ public class SummingBigDecimalCollectorTest {
     public void testSummingBigDecimal() {
         List<BigDecimal> list = asList(BigDecimal.ONE, new BigDecimal("2"), new BigDecimal("3"));
 
-        List<BigDecimal> result = SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(d -> d, list);
+        List<BigDecimal> result = list.stream().collect(SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(bd -> bd));
 
         assertThat(result).containsExactly(BigDecimal.ONE, new BigDecimal("3"), new BigDecimal("6"));
     }
@@ -35,7 +35,7 @@ public class SummingBigDecimalCollectorTest {
     public void testSummingBigDecimalWithSetCollector() {
         List<BigDecimal> list = asList(BigDecimal.ONE, new BigDecimal("2"), new BigDecimal("3"));
 
-        Set<BigDecimal> result = SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(i -> i, list, toSet());
+        Set<BigDecimal> result = list.stream().collect(SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(bd -> bd, toSet()));
 
         assertThat(result).containsAll(asList(BigDecimal.ONE, new BigDecimal("3"), new BigDecimal("6")));
     }

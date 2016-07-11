@@ -1,11 +1,13 @@
 package org.agzamovr.collectors;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
@@ -72,16 +74,16 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, List<Integer>> summingInt(Comparator<T> comparator,
-                                              ToIntFunction<? super T> mapper) {
-        return SUMMING_INT_COLLECTOR.summingInt(comparator, mapper);
+    Collector<T, ?, List<Integer>> summingInt(ToIntFunction<? super T> mapper,
+                                              Comparator<T> comparator) {
+        return SUMMING_INT_COLLECTOR.summingInt(mapper, comparator);
     }
 
     public static <T, R>
-    Collector<T, ?, R> summingInt(Comparator<T> comparator,
-                                  ToIntFunction<? super T> mapper,
+    Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
+                                  Comparator<T> comparator,
                                   Collector<Integer, ?, R> downstream) {
-        return SUMMING_INT_COLLECTOR.summingInt(comparator, mapper, downstream);
+        return SUMMING_INT_COLLECTOR.summingInt(mapper, comparator, downstream);
     }
 
     public static <T extends Comparable<? super T>>
@@ -98,14 +100,14 @@ public class CollectorEx {
     public static <T>
     Collector<T, ?, List<Long>> summingLong(Comparator<T> comparator,
                                             ToLongFunction<? super T> mapper) {
-        return SUMMING_LONG_COLLECTOR.summingLong(comparator, mapper);
+        return SUMMING_LONG_COLLECTOR.summingLong(mapper, comparator);
     }
 
     public static <T, R>
-    Collector<T, ?, R> summingLong(Comparator<T> comparator,
-                                   ToLongFunction<? super T> mapper,
+    Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
+                                   Comparator<T> comparator,
                                    Collector<Long, ?, R> downstream) {
-        return SUMMING_LONG_COLLECTOR.summingLong(comparator, mapper, downstream);
+        return SUMMING_LONG_COLLECTOR.summingLong(mapper, comparator, downstream);
     }
 
     public static <T extends Comparable<? super T>>
@@ -120,16 +122,16 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, List<Double>> summingDouble(Comparator<T> comparator,
-                                                ToDoubleFunction<? super T> mapper) {
-        return SUMMING_DOUBLE_COLLECTOR.summingDouble(comparator, mapper);
+    Collector<T, ?, List<Double>> summingDouble(ToDoubleFunction<? super T> mapper,
+                                                Comparator<T> comparator) {
+        return SUMMING_DOUBLE_COLLECTOR.summingDouble(mapper, comparator);
     }
 
     public static <T, R>
-    Collector<T, ?, R> summingDouble(Comparator<T> comparator,
-                                     ToDoubleFunction<? super T> mapper,
+    Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
+                                     Comparator<T> comparator,
                                      Collector<Double, ?, R> downstream) {
-        return SUMMING_DOUBLE_COLLECTOR.summingDouble(comparator, mapper, downstream);
+        return SUMMING_DOUBLE_COLLECTOR.summingDouble(mapper, comparator, downstream);
     }
 
     public static <T extends Comparable<? super T>>
@@ -144,24 +146,16 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, List<BigDecimal>> summingBigDecimal(Comparator<T> comparator,
-                                                        Function<? super T, BigDecimal> mapper) {
-        SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(comparator, mapper, list));
+    Collector<T, ?, List<BigDecimal>> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                                        Comparator<T> comparator) {
+        return SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(mapper, comparator);
     }
 
     public static <T, R>
-    Collector<T, ?, R> summingBigDecimal(Comparator<T> comparator,
-                                         Function<? super T, BigDecimal> mapper,
+    Collector<T, ?, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                         Comparator<T> comparator,
                                          Collector<BigDecimal, ?, R> downstream) {
-        SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(comparator, mapper, list, downstream));
+        return SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(mapper, comparator, downstream);
     }
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {

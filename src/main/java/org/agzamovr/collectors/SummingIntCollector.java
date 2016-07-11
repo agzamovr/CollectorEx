@@ -10,37 +10,25 @@ import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 
-import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
 class SummingIntCollector {
     static final SummingIntCollector SUMMING_INT_COLLECTOR = new SummingIntCollector();
 
-    <T extends Comparable<? super T>>
-    List<Integer> summingInt(ToIntFunction<? super T> mapper,
-                             List<T> list) {
-        return summingInt(nullsLast(naturalOrder()), mapper, list);
+    private void validateInput(ToIntFunction<?> mapper,
+                               Comparator<?> comparator,
+                               Collector<?, ?, ?> downstream) {
+        Objects.requireNonNull(mapper, "Mapper cannot be null");
+        Objects.requireNonNull(comparator, "Comparator cannot be null");
+        Objects.requireNonNull(downstream, "Downstream collector cannot be null");
     }
 
-    <T extends Comparable<? super T>, R>
-    R summingInt(ToIntFunction<? super T> mapper,
-                 List<T> list,
-                 Collector<Integer, ?, R> downstream) {
-        return summingInt(nullsLast(naturalOrder()), mapper, list, downstream);
-    }
-
-    <T> List<Integer> summingInt(Comparator<T> comparator,
-                                 ToIntFunction<? super T> mapper,
-                                 List<T> list) {
-        return summingInt(comparator, mapper, list, toList());
-    }
-
-    <T, A, R> R summingInt(Comparator<T> comparator,
-                           ToIntFunction<? super T> mapper,
+    <T, A, R> R summingInt(ToIntFunction<? super T> mapper,
+                           Comparator<T> comparator,
                            List<T> list,
                            Collector<Integer, A, R> downstream) {
-        Objects.requireNonNull(comparator, "Comparator cannot be null");
+        validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         int sum = 0;
         Supplier<A> downstreamSupplier = downstream.supplier();
@@ -56,41 +44,28 @@ class SummingIntCollector {
 
     <T extends Comparable<? super T>>
     Collector<T, ?, List<Integer>> summingInt(ToIntFunction<? super T> mapper) {
-        SummingIntCollector sum = new SummingIntCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingInt(mapper, list));
+        return summingInt(mapper, nullsLast(Comparator.<T>naturalOrder()));
     }
 
     <T extends Comparable<? super T>, R>
     Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
                                   Collector<Integer, ?, R> downstream) {
-        SummingIntCollector sum = new SummingIntCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingInt(mapper, list, downstream));
+        return summingInt(mapper, nullsLast(Comparator.<T>naturalOrder()), downstream);
     }
 
     <T>
-    Collector<T, ?, List<Integer>> summingInt(Comparator<T> comparator,
-                                              ToIntFunction<? super T> mapper) {
-        SummingIntCollector sum = new SummingIntCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingInt(comparator, mapper, list));
+    Collector<T, ?, List<Integer>> summingInt(ToIntFunction<? super T> mapper,
+                                              Comparator<T> comparator) {
+        return summingInt(mapper, comparator, toList());
     }
 
     <T, R>
-    Collector<T, ?, R> summingInt(Comparator<T> comparator,
-                                  ToIntFunction<? super T> mapper,
+    Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
+                                  Comparator<T> comparator,
                                   Collector<Integer, ?, R> downstream) {
-        SummingIntCollector sum = new SummingIntCollector();
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> sum.summingInt(comparator, mapper, list, downstream));
+                (list) -> summingInt(mapper, comparator, list, downstream));
     }
 }

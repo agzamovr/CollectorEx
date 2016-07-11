@@ -10,37 +10,25 @@ import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collector;
 
-import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
 class SummingDoubleCollector {
     static final SummingDoubleCollector SUMMING_DOUBLE_COLLECTOR = new SummingDoubleCollector();
 
-    <T extends Comparable<? super T>>
-    List<Double> summingDouble(ToDoubleFunction<? super T> mapper,
-                               List<T> list) {
-        return summingDouble(nullsLast(naturalOrder()), mapper, list);
-    }
-
-    <T extends Comparable<? super T>, R>
-    R summingDouble(ToDoubleFunction<? super T> mapper,
-                    List<T> list,
-                    Collector<Double, ?, R> downstream) {
-        return summingDouble(nullsLast(naturalOrder()), mapper, list, downstream);
-    }
-
-    <T> List<Double> summingDouble(Comparator<T> comparator,
-                                          ToDoubleFunction<? super T> mapper,
-                                          List<T> list) {
-        return summingDouble(comparator, mapper, list, toList());
-    }
-
-    <T, A, R> R summingDouble(Comparator<T> comparator,
-                                     ToDoubleFunction<? super T> mapper,
-                                     List<T> list,
-                                     Collector<Double, A, R> downstream) {
+    private void validateInput(ToDoubleFunction<?> mapper,
+                               Comparator<?> comparator,
+                               Collector<?, ?, ?> downstream) {
+        Objects.requireNonNull(mapper, "Mapper cannot be null");
         Objects.requireNonNull(comparator, "Comparator cannot be null");
+        Objects.requireNonNull(downstream, "Downstream collector cannot be null");
+    }
+
+    <T, A, R> R summingDouble(ToDoubleFunction<? super T> mapper,
+                              Comparator<T> comparator,
+                              List<T> list,
+                              Collector<Double, A, R> downstream) {
+        validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         double sum = 0.0;
         double compensation = 0.0;
@@ -61,41 +49,28 @@ class SummingDoubleCollector {
 
     <T extends Comparable<? super T>>
     Collector<T, ?, List<Double>> summingDouble(ToDoubleFunction<? super T> mapper) {
-        SummingDoubleCollector sum = new SummingDoubleCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingDouble(mapper, list));
+        return summingDouble(mapper, nullsLast(Comparator.<T>naturalOrder()));
     }
 
     <T extends Comparable<? super T>, R>
     Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
                                      Collector<Double, ?, R> downstream) {
-        SummingDoubleCollector sum = new SummingDoubleCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingDouble(mapper, list, downstream));
+        return summingDouble(mapper, nullsLast(Comparator.<T>naturalOrder()), downstream);
     }
 
     <T>
-    Collector<T, ?, List<Double>> summingDouble(Comparator<T> comparator,
-                                                ToDoubleFunction<? super T> mapper) {
-        SummingDoubleCollector sum = new SummingDoubleCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingDouble(comparator, mapper, list));
+    Collector<T, ?, List<Double>> summingDouble(ToDoubleFunction<? super T> mapper,
+                                                Comparator<T> comparator) {
+        return summingDouble(mapper, comparator, toList());
     }
 
     <T, R>
-    Collector<T, ?, R> summingDouble(Comparator<T> comparator,
-                                     ToDoubleFunction<? super T> mapper,
+    Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
+                                     Comparator<T> comparator,
                                      Collector<Double, ?, R> downstream) {
-        SummingDoubleCollector sum = new SummingDoubleCollector();
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> sum.summingDouble(comparator, mapper, list, downstream));
+                (list) -> summingDouble(mapper, comparator, list, downstream));
     }
 }

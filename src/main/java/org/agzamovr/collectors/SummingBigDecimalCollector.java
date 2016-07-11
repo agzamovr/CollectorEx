@@ -10,37 +10,25 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
 class SummingBigDecimalCollector {
     static final SummingBigDecimalCollector SUMMING_BIG_DECIMAL_COLLECTOR = new SummingBigDecimalCollector();
 
-    <T extends Comparable<? super T>>
-    List<BigDecimal> summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                       List<T> list) {
-        return summingBigDecimal(nullsLast(naturalOrder()), mapper, list);
-    }
-
-    <T extends Comparable<? super T>, R>
-    R summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                        List<T> list,
-                        Collector<BigDecimal, ?, R> downstream) {
-        return summingBigDecimal(nullsLast(naturalOrder()), mapper, list, downstream);
-    }
-
-    <T> List<BigDecimal> summingBigDecimal(Comparator<T> comparator,
-                                                  Function<? super T, BigDecimal> mapper,
-                                                  List<T> list) {
-        return summingBigDecimal(comparator, mapper, list, toList());
-    }
-
-    <T, A, R> R summingBigDecimal(Comparator<T> comparator,
-                                         Function<? super T, BigDecimal> mapper,
-                                         List<T> list,
-                                         Collector<BigDecimal, A, R> downstream) {
+    private void validateInput(Function<?, BigDecimal> mapper,
+                               Comparator<?> comparator,
+                               Collector<?, ?, ?> downstream) {
+        Objects.requireNonNull(mapper, "Mapper cannot be null");
         Objects.requireNonNull(comparator, "Comparator cannot be null");
+        Objects.requireNonNull(downstream, "Downstream collector cannot be null");
+    }
+
+    <T, A, R> R summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                  Comparator<T> comparator,
+                                  List<T> list,
+                                  Collector<BigDecimal, A, R> downstream) {
+        validateInput(mapper, comparator, downstream);
         list.sort(comparator);
         BigDecimal sum = BigDecimal.ZERO;
         Supplier<A> downstreamSupplier = downstream.supplier();
@@ -56,41 +44,29 @@ class SummingBigDecimalCollector {
 
     <T extends Comparable<? super T>>
     Collector<T, ?, List<BigDecimal>> summingBigDecimal(Function<? super T, BigDecimal> mapper) {
-        SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(mapper, list));
+        return summingBigDecimal(mapper, nullsLast(Comparator.<T>naturalOrder()));
     }
 
     <T extends Comparable<? super T>, R>
     Collector<T, ?, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
                                          Collector<BigDecimal, ?, R> downstream) {
-        SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(mapper, list, downstream));
+        return summingBigDecimal(mapper, nullsLast(Comparator.<T>naturalOrder()), downstream);
     }
 
     <T>
-    Collector<T, ?, List<BigDecimal>> summingBigDecimal(Comparator<T> comparator,
-                                                        Function<? super T, BigDecimal> mapper) {
-        SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
-                List::add,
-                CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(comparator, mapper, list));
+    Collector<T, ?, List<BigDecimal>> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                                        Comparator<T> comparator) {
+        return summingBigDecimal(mapper, comparator, toList());
     }
 
     <T, R>
-    Collector<T, ?, R> summingBigDecimal(Comparator<T> comparator,
-                                         Function<? super T, BigDecimal> mapper,
+    Collector<T, ?, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                         Comparator<T> comparator,
                                          Collector<BigDecimal, ?, R> downstream) {
         SummingBigDecimalCollector sum = new SummingBigDecimalCollector();
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
-                (list) -> sum.summingBigDecimal(comparator, mapper, list, downstream));
+                (list) -> sum.summingBigDecimal(mapper, comparator, list, downstream));
     }
 }

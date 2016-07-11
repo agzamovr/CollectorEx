@@ -32,7 +32,7 @@ class RankingCollector {
         Integer rank = 0;
         T prev = null;
         Supplier<A> downstreamSupplier = downstream.supplier();
-        Function<A, R> finisher = downstream.finisher();
+        Function<A, R> downstreamFinisher = downstream.finisher();
         BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         A container = null;
         for (int i = 0; i < list.size(); i++) {
@@ -40,17 +40,15 @@ class RankingCollector {
             boolean startNextRank = prev == null || comparator.compare(current, prev) != 0;
             if (startNextRank) {
                 if (container != null)
-                    map.put(rank, finisher.apply(container));
+                    map.put(rank, downstreamFinisher.apply(container));
                 rank = denseRank ? rank + 1 : i + 1;
                 container = downstreamSupplier.get();
-                downstreamAccumulator.accept(container, current);
-            } else {
-                downstreamAccumulator.accept(container, current);
             }
+            downstreamAccumulator.accept(container, current);
             prev = current;
         }
         if (container != null)
-            map.put(rank, finisher.apply(container));
+            map.put(rank, downstreamFinisher.apply(container));
         return map;
     }
 
@@ -86,7 +84,7 @@ class RankingCollector {
 
     <T>
     Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
-                                                      Comparator<Integer> rankOrder) {
+                                                           Comparator<Integer> rankOrder) {
         return rank(comparator, rankOrder, true, toList());
     }
 

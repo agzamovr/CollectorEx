@@ -10,10 +10,20 @@ import static java.util.Arrays.asList;
 
 class Bid {
     final int num;
+    int supplierId;
     final BigDecimal price;
     final Date shippingDate;
     final Integer experience;
     final Date sentDate;
+
+    public Bid(int num, int supplierId) {
+        this.num = num;
+        this.supplierId = supplierId;
+        this.price = null;
+        this.shippingDate = null;
+        this.experience = null;
+        this.sentDate = null;
+    }
 
     public Bid(int num, BigDecimal price, Date shippingDate, Integer experience, Date sentDate) {
         this.num = num;
@@ -21,6 +31,10 @@ class Bid {
         this.shippingDate = shippingDate;
         this.experience = experience;
         this.sentDate = sentDate;
+    }
+
+    public int getNum() {
+        return num;
     }
 
     public BigDecimal getPrice() {
@@ -47,20 +61,22 @@ class Bid {
         Bid bid = (Bid) o;
 
         if (num != bid.num) return false;
+        if (supplierId != bid.supplierId) return false;
         if (price != null ? !price.equals(bid.price) : bid.price != null) return false;
         if (shippingDate != null ? !shippingDate.equals(bid.shippingDate) : bid.shippingDate != null) return false;
         if (experience != null ? !experience.equals(bid.experience) : bid.experience != null) return false;
-        return sentDate.equals(bid.sentDate);
+        return sentDate != null ? sentDate.equals(bid.sentDate) : bid.sentDate == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = num;
+        result = 31 * result + supplierId;
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (shippingDate != null ? shippingDate.hashCode() : 0);
         result = 31 * result + (experience != null ? experience.hashCode() : 0);
-        result = 31 * result + sentDate.hashCode();
+        result = 31 * result + (sentDate != null ? sentDate.hashCode() : 0);
         return result;
     }
 

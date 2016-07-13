@@ -8,6 +8,7 @@ import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
+import static org.agzamovr.collectors.DistinctCollector.DISTINCT_COLLECTOR;
 import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
 import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
@@ -231,6 +232,48 @@ public class CollectorEx {
                                            Comparator<? super T> comparator,
                                            Collector<T, ?, R> downstream) {
         return N_TILE_COLLECTOR.ntile(tiles, comparator, downstream);
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, ?, List<T>> distinct() {
+        return DISTINCT_COLLECTOR.distinct();
+    }
+
+    public static <T>
+    Collector<T, ?, List<T>> distinct(Comparator<? super T> comparator) {
+        return DISTINCT_COLLECTOR.distinct(comparator);
+    }
+
+    public static <T extends Comparable<? super T>, R>
+    Collector<T, ?, R> distinct(Collector<T, ?, R> downstream) {
+        return DISTINCT_COLLECTOR.distinct(downstream);
+    }
+
+    public static <T, D extends Comparable<? super D>>
+    Collector<T, ?, List<D>> distinct(Function<? super T, D> mapper) {
+        return DISTINCT_COLLECTOR.distinct(mapper);
+    }
+
+    public static <T, R>
+    Collector<T, ?, R> distinct(Comparator<? super T> comparator, Collector<? super T, ?, R> downstream) {
+        return DISTINCT_COLLECTOR.distinct(comparator, downstream);
+    }
+
+    public static <T, D>
+    Collector<T, ?, List<D>> distinct(Comparator<? super D> comparator, Function<? super T, D> mapper) {
+        return DISTINCT_COLLECTOR.distinct(comparator, mapper);
+    }
+
+    public static <T, D extends Comparable<? super D>, R>
+    Collector<T, ?, R> distinct(Function<? super T, D> mapper, Collector<? super D, ?, R> downstream) {
+        return DISTINCT_COLLECTOR.distinct(mapper, downstream);
+    }
+
+    public static <T, D, R>
+    Collector<T, ?, R> distinct(Comparator<? super D> comparator,
+                                Function<? super T, D> mapper,
+                                Collector<? super D, ?, R> downstream) {
+        return DISTINCT_COLLECTOR.distinct(comparator, mapper, downstream);
     }
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {

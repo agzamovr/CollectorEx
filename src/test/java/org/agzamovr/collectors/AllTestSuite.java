@@ -11,6 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
         SummingDoubleCollectorTest.class,
         SummingBigDecimalCollectorTest.class,
         NTileCollectorTest.class,
-        ModeCollectorTest.class})
+        ModeCollectorTest.class,
+        DistinctCollectorTest.class})
 public class AllTestSuite {
 }

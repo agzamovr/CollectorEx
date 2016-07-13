@@ -1,16 +1,14 @@
 package org.agzamovr.collectors;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
+import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.agzamovr.collectors.SummingBigDecimalCollector.SUMMING_BIG_DECIMAL_COLLECTOR;
 import static org.agzamovr.collectors.SummingDoubleCollector.SUMMING_DOUBLE_COLLECTOR;
@@ -198,6 +196,16 @@ public class CollectorEx {
                                          Comparator<T> comparator,
                                          Collector<BigDecimal, ?, R> downstream) {
         return SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(mapper, comparator, downstream);
+    }
+
+    public static <T>
+    Collector<T, ?, Set<T>> mode() {
+        return MODE_COLLECTOR.mode();
+    }
+
+    public static <T, R>
+    Collector<T, ?, Set<R>> mode(Function<? super T, R> mapper) {
+        return MODE_COLLECTOR.mode(mapper);
     }
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {

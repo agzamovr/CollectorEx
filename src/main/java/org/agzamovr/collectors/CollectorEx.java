@@ -9,6 +9,7 @@ import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
 import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
+import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.agzamovr.collectors.SummingBigDecimalCollector.SUMMING_BIG_DECIMAL_COLLECTOR;
 import static org.agzamovr.collectors.SummingDoubleCollector.SUMMING_DOUBLE_COLLECTOR;
@@ -206,6 +207,30 @@ public class CollectorEx {
     public static <T, R>
     Collector<T, ?, Set<R>> mode(Function<? super T, R> mapper) {
         return MODE_COLLECTOR.mode(mapper);
+    }
+
+    public static <T extends Comparable<? super T>>
+    Collector<T, ?, Map<Integer, List<T>>> ntile(int tiles) {
+        return N_TILE_COLLECTOR.ntile(tiles);
+    }
+
+    public static <T>
+    Collector<T, ?, Map<Integer, List<T>>> ntile(int tiles,
+                                                 Comparator<? super T> comparator) {
+        return N_TILE_COLLECTOR.ntile(tiles, comparator);
+    }
+
+    public static <T extends Comparable<? super T>, R>
+    Collector<T, ?, Map<Integer, R>> ntile(int tiles,
+                                           Collector<T, ?, R> downstream) {
+        return N_TILE_COLLECTOR.ntile(tiles, downstream);
+    }
+
+    public static <T, R>
+    Collector<T, ?, Map<Integer, R>> ntile(int tiles,
+                                           Comparator<? super T> comparator,
+                                           Collector<T, ?, R> downstream) {
+        return N_TILE_COLLECTOR.ntile(tiles, comparator, downstream);
     }
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {

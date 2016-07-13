@@ -9,6 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
         SummingIntCollectorTest.class,
         SummingLongCollectorTest.class,
         SummingDoubleCollectorTest.class,
-        SummingBigDecimalCollectorTest.class})
+        SummingBigDecimalCollectorTest.class,
+        NTileCollectorTest.class,
+        ModeCollectorTest.class})
 public class AllTestSuite {
 }

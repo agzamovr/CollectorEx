@@ -25,7 +25,7 @@ class SummingIntCollector {
     }
 
     <T, A, R> R summingIntFinisher(ToIntFunction<? super T> mapper,
-                                   Comparator<T> comparator,
+                                   Comparator<? super T> comparator,
                                    List<T> list,
                                    Collector<Integer, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
@@ -55,13 +55,13 @@ class SummingIntCollector {
 
     <T>
     Collector<T, ?, List<Integer>> summingInt(ToIntFunction<? super T> mapper,
-                                              Comparator<T> comparator) {
+                                              Comparator<? super T> comparator) {
         return summingInt(mapper, comparator, toList());
     }
 
     <T, R>
     Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
-                                  Comparator<T> comparator,
+                                  Comparator<? super T> comparator,
                                   Collector<Integer, ?, R> downstream) {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,

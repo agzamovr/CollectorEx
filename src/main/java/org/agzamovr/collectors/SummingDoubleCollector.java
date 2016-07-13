@@ -25,7 +25,7 @@ class SummingDoubleCollector {
     }
 
     <T, A, R> R summingDoubleFinisher(ToDoubleFunction<? super T> mapper,
-                                      Comparator<T> comparator,
+                                      Comparator<? super T> comparator,
                                       List<T> list,
                                       Collector<Double, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
@@ -60,13 +60,13 @@ class SummingDoubleCollector {
 
     <T>
     Collector<T, ?, List<Double>> summingDouble(ToDoubleFunction<? super T> mapper,
-                                                Comparator<T> comparator) {
+                                                Comparator<? super T> comparator) {
         return summingDouble(mapper, comparator, toList());
     }
 
     <T, R>
     Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
-                                     Comparator<T> comparator,
+                                     Comparator<? super T> comparator,
                                      Collector<Double, ?, R> downstream) {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,

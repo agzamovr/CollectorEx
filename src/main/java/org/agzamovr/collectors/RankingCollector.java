@@ -23,7 +23,7 @@ class RankingCollector {
 
     <T, A, R>
     SortedMap<Integer, R> rankFinisher(List<T> list,
-                                       Comparator<T> comparator,
+                                       Comparator<? super T> comparator,
                                        Comparator<Integer> rankOrder,
                                        boolean denseRank,
                                        Collector<? super T, A, R> downstream) {
@@ -56,7 +56,7 @@ class RankingCollector {
     <T, R>
     Map<R, Integer> mapObjToRankFinisher(List<T> list,
                                          Function<? super T, R> mapper,
-                                         Comparator<T> comparator,
+                                         Comparator<? super T> comparator,
                                          boolean denseRank) {
         SortedMap<Integer, List<T>> rankedMap = rankFinisher(list, comparator, Integer::compareTo, denseRank, toList());
         Map<R, Integer> mapObjToRank = new HashMap<>();
@@ -70,7 +70,7 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator) {
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<? super T> comparator) {
         return denseRank(comparator, Integer::compareTo);
     }
 
@@ -80,7 +80,7 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<? super T> comparator,
                                                            Comparator<Integer> rankOrder) {
         return rank(comparator, rankOrder, true, toList());
     }
@@ -91,7 +91,7 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator) {
+    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<? super T> comparator) {
         return rank(comparator, Integer::compareTo);
     }
 
@@ -101,13 +101,13 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<? super T> comparator,
                                                       Comparator<Integer> rankOrder) {
         return rank(comparator, rankOrder, false, toList());
     }
 
     <T, R>
-    Collector<T, ?, SortedMap<Integer, R>> rank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, R>> rank(Comparator<? super T> comparator,
                                                 Comparator<Integer> rankOrder,
                                                 boolean denseRank,
                                                 Collector<? super T, ?, R> downstream) {
@@ -123,7 +123,7 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<T> comparator) {
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<? super T> comparator) {
         return mapObjToRank(comparator, true);
     }
 
@@ -138,7 +138,7 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator) {
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<? super T> comparator) {
         return mapObjToRank(comparator, false);
     }
 
@@ -148,14 +148,14 @@ class RankingCollector {
     }
 
     <T>
-    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator,
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<? super T> comparator,
                                                   boolean denseRank) {
         return mapObjToRank(Function.identity(), comparator, denseRank);
     }
 
     <T, R>
     Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<? super T, R> mapper,
-                                                  Comparator<T> comparator,
+                                                  Comparator<? super T> comparator,
                                                   boolean denseRank) {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,

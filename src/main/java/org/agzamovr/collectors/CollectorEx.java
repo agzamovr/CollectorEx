@@ -24,7 +24,7 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator) {
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<? super T> comparator) {
         return RANKING_COLLECTOR.denseRank(comparator);
     }
 
@@ -34,7 +34,7 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, List<T>>> denseRank(Comparator<? super T> comparator,
                                                            Comparator<Integer> rankOrder) {
         return RANKING_COLLECTOR.denseRank(comparator, rankOrder);
     }
@@ -45,7 +45,7 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator) {
+    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<? super T> comparator) {
         return RANKING_COLLECTOR.rank(comparator);
     }
 
@@ -55,13 +55,13 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, List<T>>> rank(Comparator<? super T> comparator,
                                                       Comparator<Integer> rankOrder) {
         return RANKING_COLLECTOR.rank(comparator, rankOrder);
     }
 
     public static <T, R>
-    Collector<T, ?, SortedMap<Integer, R>> rank(Comparator<T> comparator,
+    Collector<T, ?, SortedMap<Integer, R>> rank(Comparator<? super T> comparator,
                                                 Comparator<Integer> rankOrder,
                                                 boolean denseRank,
                                                 Collector<? super T, ?, R> downstream) {
@@ -74,7 +74,7 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<T> comparator) {
+    Collector<T, ?, Map<T, Integer>> mapObjToDenseRank(Comparator<? super T> comparator) {
         return RANKING_COLLECTOR.mapObjToDenseRank(comparator);
     }
 
@@ -89,7 +89,7 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator) {
+    Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<? super T> comparator) {
         return RANKING_COLLECTOR.mapObjToRank(comparator);
     }
 
@@ -99,7 +99,7 @@ public class CollectorEx {
     }
 
     public static <T, R>
-    Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<T, R> mapper, Comparator<T> comparator) {
+    Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<T, R> mapper, Comparator<? super T> comparator) {
         return RANKING_COLLECTOR.mapObjToRank(mapper, comparator, false);
     }
 
@@ -116,13 +116,13 @@ public class CollectorEx {
 
     public static <T>
     Collector<T, ?, List<Integer>> summingInt(ToIntFunction<? super T> mapper,
-                                              Comparator<T> comparator) {
+                                              Comparator<? super T> comparator) {
         return SUMMING_INT_COLLECTOR.summingInt(mapper, comparator);
     }
 
     public static <T, R>
     Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
-                                  Comparator<T> comparator,
+                                  Comparator<? super T> comparator,
                                   Collector<Integer, ?, R> downstream) {
         return SUMMING_INT_COLLECTOR.summingInt(mapper, comparator, downstream);
     }
@@ -139,14 +139,14 @@ public class CollectorEx {
     }
 
     public static <T>
-    Collector<T, ?, List<Long>> summingLong(Comparator<T> comparator,
+    Collector<T, ?, List<Long>> summingLong(Comparator<? super T> comparator,
                                             ToLongFunction<? super T> mapper) {
         return SUMMING_LONG_COLLECTOR.summingLong(mapper, comparator);
     }
 
     public static <T, R>
     Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
-                                   Comparator<T> comparator,
+                                   Comparator<? super T> comparator,
                                    Collector<Long, ?, R> downstream) {
         return SUMMING_LONG_COLLECTOR.summingLong(mapper, comparator, downstream);
     }
@@ -164,13 +164,13 @@ public class CollectorEx {
 
     public static <T>
     Collector<T, ?, List<Double>> summingDouble(ToDoubleFunction<? super T> mapper,
-                                                Comparator<T> comparator) {
+                                                Comparator<? super T> comparator) {
         return SUMMING_DOUBLE_COLLECTOR.summingDouble(mapper, comparator);
     }
 
     public static <T, R>
     Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
-                                     Comparator<T> comparator,
+                                     Comparator<? super T> comparator,
                                      Collector<Double, ?, R> downstream) {
         return SUMMING_DOUBLE_COLLECTOR.summingDouble(mapper, comparator, downstream);
     }
@@ -188,13 +188,13 @@ public class CollectorEx {
 
     public static <T>
     Collector<T, ?, List<BigDecimal>> summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                                        Comparator<T> comparator) {
+                                                        Comparator<? super T> comparator) {
         return SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(mapper, comparator);
     }
 
     public static <T, R>
     Collector<T, ?, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                         Comparator<T> comparator,
+                                         Comparator<? super T> comparator,
                                          Collector<BigDecimal, ?, R> downstream) {
         return SUMMING_BIG_DECIMAL_COLLECTOR.summingBigDecimal(mapper, comparator, downstream);
     }

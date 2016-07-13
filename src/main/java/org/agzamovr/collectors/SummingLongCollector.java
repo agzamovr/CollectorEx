@@ -25,7 +25,7 @@ class SummingLongCollector {
     }
 
     <T, A, R> R summingLongFinisher(ToLongFunction<? super T> mapper,
-                                    Comparator<T> comparator,
+                                    Comparator<? super T> comparator,
                                     List<T> list,
                                     Collector<Long, A, R> downstream) {
         validateInput(mapper, comparator, downstream);
@@ -55,13 +55,13 @@ class SummingLongCollector {
 
     <T>
     Collector<T, ?, List<Long>> summingLong(ToLongFunction<? super T> mapper,
-                                            Comparator<T> comparator) {
+                                            Comparator<? super T> comparator) {
         return summingLong(mapper, comparator, toList());
     }
 
     <T, R>
     Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
-                                   Comparator<T> comparator,
+                                   Comparator<? super T> comparator,
                                    Collector<Long, ?, R> downstream) {
         return Collector.of((Supplier<List<T>>) ArrayList::new,
                 List::add,

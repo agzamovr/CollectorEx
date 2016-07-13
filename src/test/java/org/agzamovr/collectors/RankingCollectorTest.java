@@ -16,10 +16,10 @@ import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RankingCollectorTest {
-    private Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, singletonList(1));
-    private Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, singletonList(2));
-    private Entry<Integer, List<Integer>> entry3 = new SimpleEntry<>(3, singletonList(3));
-    private Entry<Integer, List<Integer>> entry4 = new SimpleEntry<>(4, singletonList(4));
+    private final Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, singletonList(1));
+    private final Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, singletonList(2));
+    private final Entry<Integer, List<Integer>> entry3 = new SimpleEntry<>(3, singletonList(3));
+    private final Entry<Integer, List<Integer>> entry4 = new SimpleEntry<>(4, singletonList(4));
 
     @Test
     public void testRankWithEmptyList() {
@@ -208,6 +208,19 @@ public class RankingCollectorTest {
         Entry<Integer, Integer> entry3 = new SimpleEntry<>(-3, 5);
         Entry<Integer, Integer> entry4 = new SimpleEntry<>(-4, 7);
 
+        assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
+    }
+
+    @Test
+    public void testMapToObjWithMapper() {
+        List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
+
+        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank(a -> (a < 0) ? -a : a));
+        System.out.println(rankedMap);
+        Entry<Integer, Integer> entry1 = new SimpleEntry<>(4, 1);
+        Entry<Integer, Integer> entry2 = new SimpleEntry<>(3, 3);
+        Entry<Integer, Integer> entry3 = new SimpleEntry<>(2, 5);
+        Entry<Integer, Integer> entry4 = new SimpleEntry<>(1, 7);
         assertThat(rankedMap).contains(entry1, entry2, entry3, entry4);
     }
 

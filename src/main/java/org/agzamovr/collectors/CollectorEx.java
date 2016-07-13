@@ -79,6 +79,11 @@ public class CollectorEx {
         return RANKING_COLLECTOR.mapObjToDenseRank(comparator);
     }
 
+    public static <T extends Comparable<? super T>, R>
+    Collector<T, ?, Map<R, Integer>> mapObjToDenseRank(Function<T, R> mapper) {
+        return RANKING_COLLECTOR.mapObjToDenseRank(mapper);
+    }
+
     public static <T extends Comparable<? super T>>
     Collector<T, ?, Map<T, Integer>> mapObjToRank() {
         return RANKING_COLLECTOR.mapObjToRank();
@@ -87,6 +92,16 @@ public class CollectorEx {
     public static <T>
     Collector<T, ?, Map<T, Integer>> mapObjToRank(Comparator<T> comparator) {
         return RANKING_COLLECTOR.mapObjToRank(comparator);
+    }
+
+    public static <T extends Comparable<? super T>, R>
+    Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<T, R> mapper) {
+        return RANKING_COLLECTOR.mapObjToRank(mapper);
+    }
+
+    public static <T, R>
+    Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<T, R> mapper, Comparator<T> comparator) {
+        return RANKING_COLLECTOR.mapObjToRank(mapper, comparator, false);
     }
 
     public static <T extends Comparable<? super T>>

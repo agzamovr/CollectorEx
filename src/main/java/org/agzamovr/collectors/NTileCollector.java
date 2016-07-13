@@ -9,7 +9,7 @@ import java.util.stream.Collector;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.toList;
 
-public class NTileCollector {
+class NTileCollector {
     static final NTileCollector N_TILE_COLLECTOR = new NTileCollector();
 
     <T, A, R>

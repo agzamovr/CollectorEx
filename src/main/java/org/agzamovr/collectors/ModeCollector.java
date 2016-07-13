@@ -9,7 +9,7 @@ import java.util.stream.Collector;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.toSet;
 
-public class ModeCollector {
+class ModeCollector {
     static final ModeCollector MODE_COLLECTOR = new ModeCollector();
 
     <R>

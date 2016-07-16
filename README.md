@@ -1,5 +1,5 @@
 # CollectorEx
-This library adds new coolectors with similar functionality like SQL window functions.
+This library provides new coolectors for using with java 8 streams. Some collectors are provide similar functionality like SQL window functions.
 ###Rank collector
 Rank collector calculates the rank for stream of objects using given comparator. If objects are implements Comparable interface then comparator may be omitted. Equal objects receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be consecutive numbers. To produce consecutive numbers use dense rank collector. Here is example of rank and dense rank comparators which returns sorted map with ranks as a key and list of objects as a value for corresponding key:
 ```java

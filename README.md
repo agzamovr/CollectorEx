@@ -81,7 +81,7 @@ System.out.println(result);
 // {1=[1, 2], 2=[null, 3]}
 ```
 ###Distinct collector
-Distinct collector return distinct elements of stream using given comparator. Internally it uses rank collector and takes first element for each rank. Because rank collector sorts element ditinct collector doesn't preserve original stream elements order.
+Distinct collector return distinct elements of stream using given comparator. If objects are implements Comparable interface then comparator may be omitted. Internally it uses rank collector and takes first element for each rank. Because rank collector sort elements ditinct collector doesn't preserve original order of stream elements.
 ```java
 List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null, null);
 

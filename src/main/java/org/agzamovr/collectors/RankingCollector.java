@@ -38,7 +38,7 @@ class RankingCollector {
         A container = null;
         for (int i = 0; i < list.size(); i++) {
             T current = list.get(i);
-            boolean startNextRank = prev == null || comparator.compare(current, prev) != 0;
+            boolean startNextRank = rank == 0 || comparator.compare(current, prev) != 0;
             if (startNextRank) {
                 if (container != null)
                     map.put(rank, downstreamFinisher.apply(container));

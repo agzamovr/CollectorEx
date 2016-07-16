@@ -30,7 +30,7 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>, R>
-    Collector<T, ?, SortedMap<Integer, R>> denseRank(Collector<T, ?, R> downstream) {
+    Collector<T, ?, SortedMap<Integer, R>> denseRank(Collector<? super T, ?, R> downstream) {
         return RANKING_COLLECTOR.denseRank(downstream);
     }
 
@@ -51,7 +51,7 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>, R>
-    Collector<T, ?, SortedMap<Integer, R>> rank(Collector<T, ?, R> downstream) {
+    Collector<T, ?, SortedMap<Integer, R>> rank(Collector<? super T, ?, R> downstream) {
         return RANKING_COLLECTOR.rank(downstream);
     }
 
@@ -223,14 +223,14 @@ public class CollectorEx {
 
     public static <T extends Comparable<? super T>, R>
     Collector<T, ?, Map<Integer, R>> ntile(int tiles,
-                                           Collector<T, ?, R> downstream) {
+                                           Collector<? super T, ?, R> downstream) {
         return N_TILE_COLLECTOR.ntile(tiles, downstream);
     }
 
     public static <T, R>
     Collector<T, ?, Map<Integer, R>> ntile(int tiles,
                                            Comparator<? super T> comparator,
-                                           Collector<T, ?, R> downstream) {
+                                           Collector<? super T, ?, R> downstream) {
         return N_TILE_COLLECTOR.ntile(tiles, comparator, downstream);
     }
 
@@ -245,7 +245,7 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>, R>
-    Collector<T, ?, R> distinct(Collector<T, ?, R> downstream) {
+    Collector<T, ?, R> distinct(Collector<? super T, ?, R> downstream) {
         return DISTINCT_COLLECTOR.distinct(downstream);
     }
 

@@ -27,7 +27,7 @@ System.out.println(denseRankedMap);
 // {-1=7, -2=5, -3=3, -4=1}
 // {-1=4, -2=3, -3=2, -4=1}
 ```
-If required custom collector can be provided
+If required custom collector can be provided:
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
@@ -37,7 +37,7 @@ System.out.println(rankedMap);
 // will print
 // {1=[1], 3=[2], 5=[3], 7=[4]}
 ```
-And finally the full version with custom comparator, rank comparator, dense rank flag and custom collector
+And finally the full version with custom comparator, rank comparator, dense rank flag and custom collector:
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 Comparator<Integer> intComparator = Integer::compare;
@@ -62,7 +62,7 @@ System.out.println(result);
 ```
 Custom comparator may be provided for sorting. Here is example of custom comparator which puts nulls before non null values:
 ```java
-List<Integer> list = asList(null, 1, 1, 2, 3, null);
+List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
 
 Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
@@ -73,10 +73,31 @@ System.out.println(result);
 ```
 Custom collector can be passed as downstream collector:
 ```java
-List<Integer> list = asList(null, 1, 1, 2, 3, null);
+List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 
 Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, toSet()));
 System.out.println(result);
 // will print
 // {1=[1, 2], 2=[null, 3]}
+```
+###Distinct collector
+Distinct collector return distinct elements of stream using given comparator. Internally it uses rank collector and takes first element for each rank. Because rank collector sorts element ditinct collector doesn't preserve original stream elements order.
+```java
+List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null, null);
+
+List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct());
+
+System.out.println(result);
+//will print
+//[-1, 1, 2, null]
+```
+Custom mapping function can be passed to collector to apply for stream elements:
+```java
+List<Integer> list = Arrays.asList(1, -1, 2, -2, 3);
+
+List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct(i ->  i * i));
+
+System.out.println(result);
+// will print
+// [1, 4, 9]
 ```

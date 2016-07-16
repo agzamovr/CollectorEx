@@ -85,7 +85,7 @@ Distinct collector return distinct elements of stream using given comparator. In
 ```java
 List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null, null);
 
-List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct());
+List<Integer> result = list.stream().collect(CollectorEx.distinct());
 
 System.out.println(result);
 //will print
@@ -95,7 +95,7 @@ Custom mapping function can be passed to collector to apply for stream elements:
 ```java
 List<Integer> list = Arrays.asList(1, -1, 2, -2, 3);
 
-List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct(i ->  i * i));
+List<Integer> result = list.stream().collect(CollectorEx.distinct(i ->  i * i));
 
 System.out.println(result);
 // will print

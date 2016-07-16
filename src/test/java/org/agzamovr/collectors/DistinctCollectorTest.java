@@ -10,7 +10,6 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
-import static org.agzamovr.collectors.DistinctCollector.DISTINCT_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DistinctCollectorTest {
@@ -28,7 +27,7 @@ public class DistinctCollectorTest {
     public void testDistinctWithEmptyList() {
         List<Integer> list = emptyList();
 
-        List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct());
+        List<Integer> result = list.stream().collect(CollectorEx.distinct());
 
         assertThat(result).isEmpty();
     }
@@ -37,7 +36,7 @@ public class DistinctCollectorTest {
     public void testDistinctWithIntegerList() {
         List<Integer> list = asList(1, 2, 2, 1, -1, null);
 
-        List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct());
+        List<Integer> result = list.stream().collect(CollectorEx.distinct());
 
         assertThat(result).containsExactly(-1, 1, 2, null);
     }
@@ -46,21 +45,21 @@ public class DistinctCollectorTest {
     public void testDistinctWithCustomMapper() {
         List<Integer> list = asList(1, -1, 2, -2, 3);
 
-        List<Integer> result = list.stream().collect(DISTINCT_COLLECTOR.distinct(i -> i * i));
+        List<Integer> result = list.stream().collect(CollectorEx.distinct(i -> i * i));
 
         assertThat(result).containsExactly(1, 4, 9);
     }
 
     @Test
     public void testDistinctWithCustomComparator() {
-        List<Integer> result = bidList.stream().collect(DISTINCT_COLLECTOR.distinct(Bid::getNum));
+        List<Integer> result = bidList.stream().collect(CollectorEx.distinct(Bid::getNum));
 
         assertThat(result).containsExactly(1);
     }
 
     @Test
     public void testDistinctWithCustomCollector() {
-        Set<Integer> result = bidList.stream().collect(DISTINCT_COLLECTOR.distinct(Bid::getNum, toSet()));
+        Set<Integer> result = bidList.stream().collect(CollectorEx.distinct(Bid::getNum, toSet()));
 
         assertThat(result).containsExactly(1);
     }

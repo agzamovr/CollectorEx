@@ -12,7 +12,6 @@ import static java.util.Collections.singletonList;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
 import static java.util.stream.Collectors.*;
-import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RankingCollectorTest {
@@ -25,8 +24,8 @@ public class RankingCollectorTest {
     public void testRankWithEmptyList() {
         List<Integer> list = Collections.emptyList();
 
-        SortedMap<Integer, List<Integer>> result = list.stream().collect
-                (RANKING_COLLECTOR.rank());
+        SortedMap<Integer, List<Integer>> result = list.stream()
+                .collect(CollectorEx.rank());
 
         assertThat(result.isEmpty());
     }
@@ -35,8 +34,8 @@ public class RankingCollectorTest {
     public void testRankWithSortedIntegerList() {
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank());
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank());
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
@@ -45,8 +44,8 @@ public class RankingCollectorTest {
     public void testRankWithReverseSortedIntegerList() {
         List<Integer> list = asList(4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank());
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank());
 
         assertThat(rankedMap).containsExactly(entry1, entry2, entry3, entry4);
     }
@@ -55,8 +54,8 @@ public class RankingCollectorTest {
     public void testRankWithDuplicates() {
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank());
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank());
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 2));
@@ -69,8 +68,8 @@ public class RankingCollectorTest {
     public void testDenseRankWithDuplicates() {
         List<Integer> list = asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.denseRank());
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.denseRank());
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 1));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(2, asList(2, 2));
@@ -84,8 +83,8 @@ public class RankingCollectorTest {
         List<Integer> list = Arrays.asList(1, 2, 3, 4);
         Comparator<Integer> intComparator = Integer::compare;
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank(intComparator, intComparator.reversed()));
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank(intComparator, intComparator.reversed()));
 
         assertThat(rankedMap).containsExactly(entry4, entry3, entry2, entry1);
     }
@@ -94,8 +93,8 @@ public class RankingCollectorTest {
     public void testRankWithCustomComparator() {
         List<Integer> list = asList(1, 2, 3, 4);
 
-        SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank(this::evenOddComparator));
+        SortedMap<Integer, List<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank(this::evenOddComparator));
 
         Entry<Integer, List<Integer>> entry1 = new SimpleEntry<>(1, asList(1, 3));
         Entry<Integer, List<Integer>> entry2 = new SimpleEntry<>(3, asList(2, 4));
@@ -113,8 +112,8 @@ public class RankingCollectorTest {
     public void testRankWithSetCollector() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank(toSet()));
+        SortedMap<Integer, Set<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank(toSet()));
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(2));
@@ -127,8 +126,8 @@ public class RankingCollectorTest {
     public void testRankWithMapperCollector() {
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
-        SortedMap<Integer, Set<Integer>> rankedMap = list.stream().collect
-                (RANKING_COLLECTOR.rank(mapping(i -> i * i, toSet())));
+        SortedMap<Integer, Set<Integer>> rankedMap = list.stream()
+                .collect(CollectorEx.rank(mapping(i -> i * i, toSet())));
 
         Entry<Integer, Set<Integer>> entry1 = new SimpleEntry<>(1, singleton(1));
         Entry<Integer, Set<Integer>> entry2 = new SimpleEntry<>(3, singleton(4));
@@ -141,7 +140,7 @@ public class RankingCollectorTest {
     public void testGroupingByCollectorWithRankCollector() {
         List<Integer> list = asList(1, 2, 3, 4);
         Map<Integer, SortedMap<Integer, List<Integer>>> rankedMap = list.stream()
-                .collect(groupingBy(i -> i % 2, RANKING_COLLECTOR.rank()));
+                .collect(groupingBy(i -> i % 2, CollectorEx.rank()));
         SortedMap<Integer, List<Integer>> odds = new TreeMap<>();
         odds.put(1, singletonList(1));
         odds.put(2, singletonList(3));
@@ -157,7 +156,7 @@ public class RankingCollectorTest {
     public void testMapObjToDenseRank() {
         List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
 
-        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToDenseRank());
+        Map<Integer, Integer> rankedMap = list.stream().collect(CollectorEx.mapObjToDenseRank());
 
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 4);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 3);
@@ -172,7 +171,7 @@ public class RankingCollectorTest {
         List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
         Comparator<Integer> integerComparator = Integer::compareTo;
         Map<Integer, Integer> rankedMap = list.stream()
-                .collect(RANKING_COLLECTOR.mapObjToDenseRank(integerComparator.reversed()));
+                .collect(CollectorEx.mapObjToDenseRank(integerComparator.reversed()));
 
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 1);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 2);
@@ -186,7 +185,7 @@ public class RankingCollectorTest {
     public void testMapObjToRank() {
         List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
 
-        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank());
+        Map<Integer, Integer> rankedMap = list.stream().collect(CollectorEx.mapObjToRank());
 
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 7);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 5);
@@ -201,7 +200,8 @@ public class RankingCollectorTest {
         List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
         Comparator<Integer> integerComparator = Integer::compareTo;
 
-        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank(integerComparator.reversed()));
+        Map<Integer, Integer> rankedMap = list.stream()
+                .collect(CollectorEx.mapObjToRank(integerComparator.reversed()));
 
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(-1, 1);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(-2, 3);
@@ -215,7 +215,8 @@ public class RankingCollectorTest {
     public void testMapToObjWithMapper() {
         List<Integer> list = asList(-1, -2, -3, -4, -4, -3, -2, -1);
 
-        Map<Integer, Integer> rankedMap = list.stream().collect(RANKING_COLLECTOR.mapObjToRank(a -> (a < 0) ? -a : a));
+        Map<Integer, Integer> rankedMap = list.stream()
+                .collect(CollectorEx.mapObjToRank(a -> (a < 0) ? -a : a));
         System.out.println(rankedMap);
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(4, 1);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(3, 3);
@@ -229,7 +230,8 @@ public class RankingCollectorTest {
         Comparator<Bid> bidComparator = buildComplexComparator();
         List<Bid> bids = Bid.getBids();
 
-        Map<Bid, Integer> rankedMaps = bids.stream().collect(RANKING_COLLECTOR.mapObjToDenseRank(bidComparator));
+        Map<Bid, Integer> rankedMaps = bids.stream()
+                .collect(CollectorEx.mapObjToDenseRank(bidComparator));
 
         rankedMaps.forEach((bid, rank) -> assertThat(bid.num).isEqualTo(rank));
     }
@@ -241,7 +243,7 @@ public class RankingCollectorTest {
         List<Bid> bids = Bid.getBids();
 
         SortedMap<Integer, List<Bid>> rankedMap = bids.stream()
-                .collect(RANKING_COLLECTOR.rank(bidComparator));
+                .collect(CollectorEx.rank(bidComparator));
 
         assertThat(rankedMap.size()).isEqualTo(bids.size());
         List<Bid> actualBid = rankedMap.get(1);

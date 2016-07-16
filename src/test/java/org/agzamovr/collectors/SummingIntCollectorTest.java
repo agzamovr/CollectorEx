@@ -8,7 +8,6 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
-import static org.agzamovr.collectors.SummingIntCollector.SUMMING_INT_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SummingIntCollectorTest {
@@ -17,7 +16,7 @@ public class SummingIntCollectorTest {
     public void testSummingEmptyList() {
         List<Integer> list = emptyList();
 
-        List<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i));
+        List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
 
         assertThat(result.isEmpty());
     }
@@ -26,7 +25,7 @@ public class SummingIntCollectorTest {
     public void testSummingInt() {
         List<Integer> list = asList(1, 2, 3);
 
-        List<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i));
+        List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
 
         assertThat(result).containsExactly(1, 3, 6);
     }
@@ -35,7 +34,7 @@ public class SummingIntCollectorTest {
     public void testSummingIntWithSetCollector() {
         List<Integer> list = asList(1, 2, 3);
 
-        Set<Integer> result = list.stream().collect(SUMMING_INT_COLLECTOR.summingInt(i -> i, toSet()));
+        Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i, toSet()));
 
         assertThat(result).containsExactly(1, 3, 6);
     }

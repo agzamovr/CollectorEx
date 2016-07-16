@@ -11,7 +11,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
-import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NTileCollectorTest {
@@ -20,7 +19,7 @@ public class NTileCollectorTest {
     public void testNTileWithEmptyList() {
         List<Integer> list = emptyList();
 
-        Map<Integer, List<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(1));
+        Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(1));
 
         assertThat(result).isEmpty();
     }
@@ -29,7 +28,7 @@ public class NTileCollectorTest {
     public void testNTileWithListSizeSmallerThanTilesCount() {
         List<Integer> list = singletonList(1);
 
-        Map<Integer, List<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(2));
+        Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
 
         assertThat(result).containsEntry(1, singletonList(1));
     }
@@ -38,7 +37,7 @@ public class NTileCollectorTest {
     public void testNTileWithListSizeGreaterThanTilesCount() {
         List<Integer> list = asList(null, 1, 1, 2, 3, null);
 
-        Map<Integer, List<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(2));
+        Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
 
         assertThat(result).containsEntry(1, asList(1, 1, 2));
         assertThat(result).containsEntry(2, asList(3, null, null));
@@ -49,7 +48,7 @@ public class NTileCollectorTest {
         List<Integer> list = asList(null, 1, 1, 2, 3, null);
         Comparator<Integer> integerComparator = Comparator.nullsLast(Integer::compareTo);
 
-        Map<Integer, List<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(2, integerComparator.reversed()));
+        Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator.reversed()));
 
         assertThat(result).containsEntry(1, asList(null, null, 3));
         assertThat(result).containsEntry(2, asList(2, 1, 1));
@@ -59,7 +58,7 @@ public class NTileCollectorTest {
     public void testNTileWithSetCollector() {
         List<Integer> list = asList(null, 1, 1, 2, 3, null);
 
-        Map<Integer, Set<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(2, toSet()));
+        Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, toSet()));
 
         assertThat(result.get(1)).contains(1, 2);
         assertThat(result.get(2)).contains(3, null);
@@ -70,7 +69,7 @@ public class NTileCollectorTest {
         List<Integer> list = asList(null, 1, 1, 2, 3, null);
         Comparator<Integer> integerComparator = Comparator.nullsLast(Integer::compareTo);
 
-        Map<Integer, Set<Integer>> result = list.stream().collect(N_TILE_COLLECTOR.ntile(2, integerComparator.reversed(), toSet()));
+        Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator.reversed(), toSet()));
 
         assertThat(result.get(1)).contains(3, null);
         assertThat(result.get(2)).contains(1, 2);

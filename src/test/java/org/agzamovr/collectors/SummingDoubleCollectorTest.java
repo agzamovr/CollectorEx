@@ -8,7 +8,6 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
-import static org.agzamovr.collectors.SummingDoubleCollector.SUMMING_DOUBLE_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SummingDoubleCollectorTest {
@@ -16,7 +15,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingEmptyList() {
         List<Double> list = emptyList();
 
-        List<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d));
+        List<Double> result = list.stream().collect(CollectorEx.summingDouble(d -> d));
 
         assertThat(result.isEmpty());
     }
@@ -25,7 +24,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingDouble() {
         List<Double> list = asList(1.0, 2.1, 3.1);
 
-        List<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d));
+        List<Double> result = list.stream().collect(CollectorEx.summingDouble(d -> d));
 
         assertThat(result).containsExactly(1.0, 3.1, 6.2);
     }
@@ -34,7 +33,7 @@ public class SummingDoubleCollectorTest {
     public void testSummingDoubleWithSetCollector() {
         List<Double> list = asList(1.0, 2.1, 3.1);
 
-        Set<Double> result = list.stream().collect(SUMMING_DOUBLE_COLLECTOR.summingDouble(d -> d, toSet()));
+        Set<Double> result = list.stream().collect(CollectorEx.summingDouble(d -> d, toSet()));
 
         assertThat(result).containsAll(asList(1.0, 3.1, 6.2));
     }

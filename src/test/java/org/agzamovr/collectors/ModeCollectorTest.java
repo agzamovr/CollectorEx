@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ModeCollectorTest {
@@ -15,7 +14,7 @@ public class ModeCollectorTest {
     public void testModeIntegerList() {
         List<Integer> list = Arrays.asList(1, 1, 2, 2, 3, 4, null, null);
 
-        Set<Integer> result = list.stream().collect(MODE_COLLECTOR.mode());
+        Set<Integer> result = list.stream().collect(CollectorEx.mode());
 
         assertThat(result).contains(1, 2, null);
     }
@@ -24,7 +23,7 @@ public class ModeCollectorTest {
     public void testModeWithCustomMapper() {
         List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
 
-        Set<Integer> result = list.stream().collect(MODE_COLLECTOR.mode(Math::abs));
+        Set<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs));
 
         assertThat(result).contains(1, 2);
     }

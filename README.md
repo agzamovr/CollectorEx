@@ -32,7 +32,7 @@ System.out.println(denseRankedMap);
 // {-1=7, -2=5, -3=3, -4=1}
 // {-1=4, -2=3, -3=2, -4=1}
 ```
-If required custom collector can be provided:
+If required custom downstream collector can be provided:
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 
@@ -42,7 +42,7 @@ System.out.println(rankedMap);
 // will print
 // {1=[1], 3=[2], 5=[3], 7=[4]}
 ```
-And finally the full version with custom comparator, rank comparator, dense rank flag and custom collector:
+And finally the full version with custom comparator, rank comparator, dense rank flag and custom downstream collector:
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
 Comparator<Integer> intComparator = Integer::compare;

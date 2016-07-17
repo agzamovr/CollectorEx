@@ -1,6 +1,11 @@
 # CollectorEx
 This library provides new coolectors for using with java 8 streams. Some collectors are provide similar functionality like SQL window functions.
-###Rank collector
+
+1. [Rank collector](#rank)
+2. [NTile collector](#ntile)
+3. [Distinct collector](#distinct)
+
+###<a name="rank">Rank collector</a>
 Rank collector calculates the rank for stream of objects using given comparator. If objects are implements Comparable interface then comparator may be omitted. Equal objects receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be consecutive numbers. To produce consecutive numbers use dense rank collector. Here is example of rank and dense rank comparators which returns sorted map with ranks as a key and list of objects as a value for corresponding key:
 ```java
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
@@ -49,7 +54,7 @@ System.out.println(rankedMap);
 // will print
 // {7=[4], 5=[3], 3=[2], 1=[1]}
 ```
-###NTile collector
+###<a name="ntile">NTile collector</a>
 NTile collector divides stream of objects into a number of buckets using given comparator. If objects are implements Comparable interface then comparator may be omitted. Default collector returns map with tile number as a key and list of objects as a value for corresponding number.
 ```java
 List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
@@ -80,7 +85,7 @@ System.out.println(result);
 // will print
 // {1=[1, 2], 2=[null, 3]}
 ```
-###Distinct collector
+###<a name="distinct">Distinct collector</a>
 Distinct collector return distinct elements of stream using given comparator. If objects are implements Comparable interface then comparator may be omitted. Internally it uses rank collector and takes first element for each rank. Because rank collector sort elements ditinct collector doesn't preserve original order of stream elements.
 ```java
 List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null, null);

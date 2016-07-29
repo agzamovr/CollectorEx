@@ -10,6 +10,7 @@ import java.util.stream.Collector;
 
 import static org.agzamovr.collectors.DistinctCollector.DISTINCT_COLLECTOR;
 import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
+import static org.agzamovr.collectors.MultiValueMapCollector.MULTI_VALUE_MAP_COLLECTOR;
 import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.agzamovr.collectors.SummingBigDecimalCollector.SUMMING_BIG_DECIMAL_COLLECTOR;
@@ -290,6 +291,25 @@ public class CollectorEx {
         return DISTINCT_COLLECTOR.distinct(comparator, mapper, downstream);
     }
 
+    public static <T, V>
+    Collector<Map<T, V>, ?, Map<T, List<V>>> mapStreamToMultiValueMap() {
+        return MULTI_VALUE_MAP_COLLECTOR.mapStreamToMultiValueMap();
+    }
+
+    public static <T, V, R>
+    Collector<Map<T, V>, ?, Map<T, R>> mapStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
+        return MULTI_VALUE_MAP_COLLECTOR.mapStreamToMultiValueMap(downstream);
+    }
+
+    public static <T, V>
+    Collector<Map.Entry<T, V>, ?, Map<T, List<V>>> entryStreamToMultiValueMap() {
+        return MULTI_VALUE_MAP_COLLECTOR.entryStreamToMultiValueMap();
+    }
+
+    public static <T, V, R>
+    Collector<Map.Entry<T, V>, ?, Map<T, R>> entryStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
+        return MULTI_VALUE_MAP_COLLECTOR.entryStreamToMultiValueMap(downstream);
+    }
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {
         left.addAll(right);

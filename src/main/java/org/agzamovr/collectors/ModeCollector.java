@@ -12,24 +12,23 @@ import static java.util.stream.Collectors.toSet;
 class ModeCollector {
     static final ModeCollector MODE_COLLECTOR = new ModeCollector();
 
-    <R>
-    Set<R> modeFinisher(Map<R, Long> map) {
-        if (map.isEmpty())
-            return Collections.emptySet();
+    <D, R>
+    R modeFinisher(Map<D, Long> map,
+                   Collector<? super D, ?, R> downstream) {
         Long max = Collections.max(map.values());
         return map.entrySet().stream()
                 .filter(e -> Objects.equals(e.getValue(), max))
-                .collect(mapping(Entry::getKey, toSet()));
+                .collect(mapping(Entry::getKey, downstream));
     }
 
-    <T, R>
-    void accumulator(Map<R, Long> map, T item, Function<? super T, R> mapper) {
-        R result = mapper.apply(item);
+    <T, D>
+    void accumulator(Map<D, Long> map, T item, Function<? super T, D> mapper) {
+        D result = mapper.apply(item);
         map.merge(result, 1L, this::add);
     }
 
-    <R>
-    Map<R, Long> combiner(Map<R, Long> left, Map<R, Long> right) {
+    <D>
+    Map<D, Long> combiner(Map<D, Long> left, Map<D, Long> right) {
         right.forEach((item, count) -> left.merge(item, count, this::add));
         return left;
     }
@@ -43,11 +42,22 @@ class ModeCollector {
         return mode(Function.identity());
     }
 
+    <T, D>
+    Collector<T, ?, Set<D>> mode(Function<? super T, D> mapper) {
+        return mode(mapper, toSet());
+    }
+
     <T, R>
-    Collector<T, ?, Set<R>> mode(Function<? super T, R> mapper) {
-        return Collector.of((Supplier<Map<R, Long>>) HashMap::new,
+    Collector<T, ?, R> mode(Collector<? super T, ?, R> downstream) {
+        return mode(Function.identity(), downstream);
+    }
+
+    <T, D, R>
+    Collector<T, ?, R> mode(Function<? super T, D> mapper,
+                            Collector<? super D, ?, R> downstream) {
+        return Collector.of((Supplier<Map<D, Long>>) HashMap::new,
                 (map, item) -> accumulator(map, item, mapper),
                 this::combiner,
-                this::modeFinisher);
+                (list) -> modeFinisher(list, downstream));
     }
 }

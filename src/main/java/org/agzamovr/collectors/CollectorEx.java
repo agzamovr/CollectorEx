@@ -205,9 +205,20 @@ public class CollectorEx {
         return MODE_COLLECTOR.mode();
     }
 
-    public static <T, R>
-    Collector<T, ?, Set<R>> mode(Function<? super T, R> mapper) {
+    public static <T, D>
+    Collector<T, ?, Set<D>> mode(Function<? super T, D> mapper) {
         return MODE_COLLECTOR.mode(mapper);
+    }
+
+    public static <T, R>
+    Collector<T, ?, R> mode(Collector<? super T, ?, R> downstream) {
+        return MODE_COLLECTOR.mode(downstream);
+    }
+
+    public static <T, D, R>
+    Collector<T, ?, R> mode(Function<? super T, D> mapper,
+                            Collector<? super D, ?, R> downstream) {
+        return MODE_COLLECTOR.mode(mapper, downstream);
     }
 
     public static <T extends Comparable<? super T>>
@@ -255,17 +266,20 @@ public class CollectorEx {
     }
 
     public static <T, R>
-    Collector<T, ?, R> distinct(Comparator<? super T> comparator, Collector<? super T, ?, R> downstream) {
+    Collector<T, ?, R> distinct(Comparator<? super T> comparator,
+                                Collector<? super T, ?, R> downstream) {
         return DISTINCT_COLLECTOR.distinct(comparator, downstream);
     }
 
     public static <T, D>
-    Collector<T, ?, List<D>> distinct(Comparator<? super D> comparator, Function<? super T, D> mapper) {
+    Collector<T, ?, List<D>> distinct(Comparator<? super D> comparator,
+                                      Function<? super T, D> mapper) {
         return DISTINCT_COLLECTOR.distinct(comparator, mapper);
     }
 
     public static <T, D extends Comparable<? super D>, R>
-    Collector<T, ?, R> distinct(Function<? super T, D> mapper, Collector<? super D, ?, R> downstream) {
+    Collector<T, ?, R> distinct(Function<? super T, D> mapper,
+                                Collector<? super D, ?, R> downstream) {
         return DISTINCT_COLLECTOR.distinct(mapper, downstream);
     }
 
@@ -275,6 +289,7 @@ public class CollectorEx {
                                 Collector<? super D, ?, R> downstream) {
         return DISTINCT_COLLECTOR.distinct(comparator, mapper, downstream);
     }
+
 
     static <T> List<T> listCombiner(List<T> left, List<T> right) {
         left.addAll(right);

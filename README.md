@@ -77,7 +77,7 @@ Custom collector can be passed as downstream collector:
 ```java
 List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 
-Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, toSet()));
+Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
 System.out.println(result);
 // {1=[1, 2], 2=[null, 3]}
 ```
@@ -100,6 +100,16 @@ List<Integer> result = list.stream().collect(CollectorEx.distinct(i ->  i * i));
 System.out.println(result);
 // [1, 4, 9]
 ```
+Custom comparator and downstream collector can be passed as:
+```java
+List<Integer> list = asList(1, -1, 2, -2, 3);
+Comparator<Integer> absComparator = (x, y) -> Integer.compare(Math.abs(x), Math.abs(y));
+
+Set<Integer> result = list.stream().collect(CollectorEx.distinct(absComparator, Collectors.toSet()));
+
+System.out.println(result);
+//[1, 2, 3]
+```
 ###<a name="summing">Summing collectors</a>
 Summing collectors are returns cumulative sum for each stream element in a given order. There are four types of this collector for int, long, double and BigDecimal types. Example:
 ```java
@@ -110,14 +120,14 @@ List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
 System.out.println(result);
 //[1, 3, 6]
 ```
-Custom comparator and  downstream collector can be passed as:
+Custom comparator and downstream collector can be passed as:
 ```java7
 List<Integer> list = asList(1, 2, 3);
 Comparator<Integer> integerComparator = Integer::compareTo;
 
 Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i,
         integerComparator.reversed(),
-        toSet()));
+        Collectors.toSet()));
 
 System.out.println(result);
 //[3, 5, 6]
@@ -132,7 +142,7 @@ Set<Integer> result = list.stream().collect(CollectorEx.mode());
 System.out.println(result);
 //[6]
 ```
-Custom mapping function and  downstream collector can be passed as:
+Custom mapping function and downstream collector can be passed as:
 ```java
 List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
 
@@ -145,7 +155,7 @@ System.out.println(result);
 ###<a name="multimap">Multi value map collector</a>
 Multi value map collector converts stream of map or map entries to multi value map. Example:
 ```java
-List<Map<Integer, Integer>> list = asList(
+List<Map<Integer, Integer>> list = Arrays.asList(
         singletonMap(null, null), singletonMap(0, 0),
         singletonMap(1, 1), singletonMap(1, -1),
         singletonMap(2, 2), singletonMap(2, -2));
@@ -157,7 +167,7 @@ System.out.println(result);
 ```
 Custom collector can be passed as downstream collector:
 ```java
-List<Map<Integer, Integer>> list = asList(
+List<Map<Integer, Integer>> list = Arrays.asList(
                 singletonMap(null, null), singletonMap(0, 0),
                 singletonMap(1, 1), singletonMap(1, -1),
                 singletonMap(2, 2), singletonMap(2, -2));

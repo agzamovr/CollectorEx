@@ -10,8 +10,7 @@ import java.util.Map.Entry;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.singletonMap;
+import static java.util.Collections.*;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,10 +19,19 @@ public class MultiValueMapCollectorTest {
 
 
     @Test
+    public void testEmptyList() {
+        List<Map<Integer, Integer>> list = emptyList();
+        Map<Integer, List<Integer>> result = list.parallelStream().collect(CollectorEx.mapStreamToMultiValueMap());
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     public void testListOfMapToMultiValueMap() {
         List<Map<Integer, Integer>> list = asList(singletonMap(null, null), getIdentityMap(2),
                 getIdentityMap(3), getIdentityMap(4));
         Map<Integer, List<Integer>> result = list.parallelStream().collect(CollectorEx.mapStreamToMultiValueMap());
+
         assertThat(result).hasSize(5);
         assertThat(result).containsEntry(null, singletonList(null));
         assertThat(result).containsEntry(0, asList(0, 0, 0));
@@ -38,6 +46,7 @@ public class MultiValueMapCollectorTest {
                 getIdentityMap(3), getIdentityMap(4));
         Map<Integer, Long> result = list.parallelStream()
                 .collect(CollectorEx.mapStreamToMultiValueMap(counting()));
+
         assertThat(result).hasSize(5);
         assertThat(result).containsEntry(null, 1L);
         assertThat(result).containsEntry(0, 3L);

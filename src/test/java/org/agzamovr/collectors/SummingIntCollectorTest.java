@@ -2,6 +2,7 @@ package org.agzamovr.collectors;
 
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -37,5 +38,18 @@ public class SummingIntCollectorTest {
         Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i, toSet()));
 
         assertThat(result).containsExactly(1, 3, 6);
+    }
+
+    @Test
+    public void testSummingIntWithComparatorAndSetCollector() {
+        List<Integer> list = asList(1, 2, 3);
+
+        Comparator<Integer> integerComparator = Integer::compareTo;
+
+        Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i,
+                integerComparator.reversed(),
+                toSet()));
+
+        assertThat(result).containsExactly(3, 5, 6);
     }
 }

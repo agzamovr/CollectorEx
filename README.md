@@ -131,11 +131,12 @@ Set<Integer> result = list.stream().collect(CollectorEx.mode());
 System.out.println(result);
 //[6]
 ```
-Custom mapping function can be passed to collector to apply for stream elements:
+Custom mapping function and  downstream collector can be passed as:
 ```java
 List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
 
-Set<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs));
+List<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs,
+        Collectors.toList()));
 
 System.out.println(result);
 //[1, 2]

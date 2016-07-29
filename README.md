@@ -109,14 +109,17 @@ List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
 System.out.println(result);
 //[1, 3, 6]
 ```
-Custom collector can be passed as downstream collector:
-```java
-List<Integer> list = Arrays.asList(1, 2, 3);
+Custom comparator and  downstream collector can be passed as:
+```java7
+List<Integer> list = asList(1, 2, 3);
+Comparator<Integer> integerComparator = Integer::compareTo;
 
-Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i, toSet()));
+Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i,
+        integerComparator.reversed(),
+        toSet()));
 
 System.out.println(result);
-//[1, 3, 6]
+//[3, 5, 6]
 ```
 ###<a name="mode">Mode collector</a>
 Mode collector returns collection of elements which appears most often in a stream.

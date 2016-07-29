@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -62,5 +63,15 @@ public class DistinctCollectorTest {
         Set<Integer> result = bidList.stream().collect(CollectorEx.distinct(Bid::getNum, toSet()));
 
         assertThat(result).containsExactly(1);
+    }
+
+    @Test
+    public void testDistinctWithCustomComparatorAndDownstreamCollector() {
+        List<Integer> list = asList(1, -1, 2, -2, 3);
+        Comparator<Integer> absComparator = (x, y) -> Integer.compare(Math.abs(x), Math.abs(y));
+
+        Set<Integer> result = list.stream().collect(CollectorEx.distinct(absComparator, toSet()));
+
+        System.out.println(result);
     }
 }

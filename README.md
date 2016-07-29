@@ -5,6 +5,7 @@ This library provides new coolectors for using with java 8 streams. Some collect
 2. [NTile collector](#ntile)
 3. [Distinct collector](#distinct)
 4. [Summing collectors](#summing)
+5. [Mode collector](#mode)
 
 ###<a name="rank">Rank collector</a>
 Rank collector calculates the rank for stream of objects using given comparator. If objects are implements Comparable interface then comparator may be omitted. Equal objects receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be consecutive numbers. To produce consecutive numbers use dense rank collector. Here is example of rank and dense rank comparators which returns sorted map with ranks as a key and list of objects as a value for corresponding key:
@@ -101,7 +102,7 @@ System.out.println(result);
 ###<a name="summing">Summing collectors</a>
 Summing collectors are returns cumulative sum for each stream element in a given order. There are four types of this collector for int, long, double and BigDecimal types. Example:
 ```java
-List<Integer> list = asList(1, 2, 3);
+List<Integer> list = Arrays.asList(1, 2, 3);
 
 List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
 
@@ -110,10 +111,29 @@ System.out.println(result);
 ```
 Custom collector can be passed as downstream collector:
 ```java
-List<Integer> list = asList(1, 2, 3);
+List<Integer> list = Arrays.asList(1, 2, 3);
 
 Set<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i, toSet()));
 
 System.out.println(result);
 //[1, 3, 6]
+```
+###<a name="mode">Mode collector</a>
+Mode collector returns collection of elements which appears most often in a stream.
+```java
+List<Integer> list = Arrays.asList(1, 3, 6, 6, 6, 6, 7, 7, 12, 12, 17);
+
+Set<Integer> result = list.stream().collect(CollectorEx.mode());
+
+System.out.println(result);
+//[6]
+```
+Custom mapping function can be passed to collector to apply for stream elements:
+```java
+List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
+
+Set<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs));
+
+System.out.println(result);
+//[1, 2]
 ```

@@ -6,6 +6,7 @@ This library provides new coolectors for using with java 8 streams. Some collect
 3. [Distinct collector](#distinct)
 4. [Summing collectors](#summing)
 5. [Mode collector](#mode)
+6. [Multi value map collector](#multimap)
 
 ###<a name="rank">Rank collector</a>
 Rank collector calculates the rank for stream of objects using given comparator. If objects are implements Comparable interface then comparator may be omitted. Equal objects receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be consecutive numbers. To produce consecutive numbers use dense rank collector. Here is example of rank and dense rank comparators which returns sorted map with ranks as a key and list of objects as a value for corresponding key:
@@ -140,4 +141,30 @@ List<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs,
 
 System.out.println(result);
 //[1, 2]
+```
+###<a name="multimap">Multi value map collector</a>
+Multi value map collector converts stream of map or map entries to multi value map. Example:
+```java
+List<Map<Integer, Integer>> list = asList(
+        singletonMap(null, null), singletonMap(0, 0),
+        singletonMap(1, 1), singletonMap(1, -1),
+        singletonMap(2, 2), singletonMap(2, -2));
+
+Map<Integer, List<Integer>> result = list.parallelStream().collect(CollectorEx.mapStreamToMultiValueMap());
+
+System.out.println(result);
+//{0=[0], null=[null], 1=[1, -1], 2=[2, -2]}
+```
+Custom collector can be passed as downstream collector:
+```java
+List<Map<Integer, Integer>> list = asList(
+                singletonMap(null, null), singletonMap(0, 0),
+                singletonMap(1, 1), singletonMap(1, -1),
+                singletonMap(2, 2), singletonMap(2, -2));
+
+Map<Integer, Long> result = list.parallelStream()
+        .collect(CollectorEx.mapStreamToMultiValueMap(Collectors.counting()));
+
+System.out.println(result);
+//{0=1, null=1, 1=2, 2=2}
 ```

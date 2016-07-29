@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
 
@@ -13,8 +12,8 @@ public class MultiValueMapCollector {
     static final MultiValueMapCollector MULTI_VALUE_MAP_COLLECTOR = new MultiValueMapCollector();
 
     <T, V, R>
-    Map<T, R> finisher(Map<T, List<V>> map,
-                       Collector<? super V, ?, R> downstream) {
+    Map<T, R> multiValueMapFinisher(Map<T, List<V>> map,
+                                    Collector<? super V, ?, R> downstream) {
         Map<T, R> resultMap = new HashMap<>();
         map.forEach((key, value) -> resultMap.put(key, value.stream().collect(downstream)));
         return resultMap;
@@ -45,11 +44,11 @@ public class MultiValueMapCollector {
     }
 
     <T, V, R>
-    Collector<Map<T, V>, ?, Map<T, R>> mapStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
-        return Collector.of((Supplier<Map<T, List<V>>>) HashMap::new,
+    Collector<Map<T, V>, Map<T, List<V>>, Map<T, R>> mapStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
+        return Collector.of(HashMap::new,
                 this::accumulator,
                 this::combiner,
-                (map) -> finisher(map, downstream));
+                (map) -> multiValueMapFinisher(map, downstream));
     }
 
     <T, V>
@@ -61,10 +60,10 @@ public class MultiValueMapCollector {
     }
 
     <T, V, R>
-    Collector<Entry<T, V>, ?, Map<T, R>> entryStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
-        return Collector.of((Supplier<Map<T, List<V>>>) HashMap::new,
+    Collector<Entry<T, V>, Map<T, List<V>>, Map<T, R>> entryStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
+        return Collector.of(HashMap::new,
                 this::accumulator,
                 this::combiner,
-                (map) -> finisher(map, downstream));
+                (map) -> multiValueMapFinisher(map, downstream));
     }
 }

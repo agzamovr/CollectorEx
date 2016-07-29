@@ -65,10 +65,10 @@ class SummingDoubleCollector {
     }
 
     <T, R>
-    Collector<T, ?, R> summingDouble(ToDoubleFunction<? super T> mapper,
-                                     Comparator<? super T> comparator,
-                                     Collector<Double, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, R> summingDouble(ToDoubleFunction<? super T> mapper,
+                                           Comparator<? super T> comparator,
+                                           Collector<Double, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> summingDoubleFinisher(mapper, comparator, list, downstream));

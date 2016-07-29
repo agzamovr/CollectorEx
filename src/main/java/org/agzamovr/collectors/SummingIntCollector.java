@@ -60,10 +60,10 @@ class SummingIntCollector {
     }
 
     <T, R>
-    Collector<T, ?, R> summingInt(ToIntFunction<? super T> mapper,
-                                  Comparator<? super T> comparator,
-                                  Collector<Integer, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, R> summingInt(ToIntFunction<? super T> mapper,
+                                        Comparator<? super T> comparator,
+                                        Collector<Integer, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> summingIntFinisher(mapper, comparator, list, downstream));

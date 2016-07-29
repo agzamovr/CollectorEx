@@ -60,10 +60,10 @@ class SummingLongCollector {
     }
 
     <T, R>
-    Collector<T, ?, R> summingLong(ToLongFunction<? super T> mapper,
-                                   Comparator<? super T> comparator,
-                                   Collector<Long, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, R> summingLong(ToLongFunction<? super T> mapper,
+                                         Comparator<? super T> comparator,
+                                         Collector<Long, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> summingLongFinisher(mapper, comparator, list, downstream));

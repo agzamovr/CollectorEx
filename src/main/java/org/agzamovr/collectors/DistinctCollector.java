@@ -3,7 +3,6 @@ package org.agzamovr.collectors;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 import static java.util.Comparator.nullsLast;
@@ -63,10 +62,10 @@ class DistinctCollector {
     }
 
     <T, D, R>
-    Collector<T, ?, R> distinct(Comparator<? super D> comparator,
-                                Function<? super T, D> mapper,
-                                Collector<? super D, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, R> distinct(Comparator<? super D> comparator,
+                                      Function<? super T, D> mapper,
+                                      Collector<? super D, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> distinctFinisher(list, comparator, mapper, downstream));

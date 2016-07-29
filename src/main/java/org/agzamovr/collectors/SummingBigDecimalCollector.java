@@ -60,10 +60,10 @@ class SummingBigDecimalCollector {
     }
 
     <T, R>
-    Collector<T, ?, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
-                                         Comparator<? super T> comparator,
-                                         Collector<BigDecimal, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, R> summingBigDecimal(Function<? super T, BigDecimal> mapper,
+                                               Comparator<? super T> comparator,
+                                               Collector<BigDecimal, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> summingBigDecimalFinisher(mapper, comparator, list, downstream));

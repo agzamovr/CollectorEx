@@ -3,7 +3,6 @@ package org.agzamovr.collectors;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.mapping;
@@ -53,9 +52,9 @@ class ModeCollector {
     }
 
     <T, D, R>
-    Collector<T, ?, R> mode(Function<? super T, D> mapper,
-                            Collector<? super D, ?, R> downstream) {
-        return Collector.of((Supplier<Map<D, Long>>) HashMap::new,
+    Collector<T, Map<D, Long>, R> mode(Function<? super T, D> mapper,
+                                       Collector<? super D, ?, R> downstream) {
+        return Collector.of(HashMap::new,
                 (map, item) -> accumulator(map, item, mapper),
                 this::combiner,
                 (list) -> modeFinisher(list, downstream));

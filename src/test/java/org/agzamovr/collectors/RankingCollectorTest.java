@@ -217,7 +217,7 @@ public class RankingCollectorTest {
 
         Map<Integer, Integer> rankedMap = list.stream()
                 .collect(CollectorEx.mapObjToRank(a -> (a < 0) ? -a : a));
-        System.out.println(rankedMap);
+
         Entry<Integer, Integer> entry1 = new SimpleEntry<>(4, 1);
         Entry<Integer, Integer> entry2 = new SimpleEntry<>(3, 3);
         Entry<Integer, Integer> entry3 = new SimpleEntry<>(2, 5);

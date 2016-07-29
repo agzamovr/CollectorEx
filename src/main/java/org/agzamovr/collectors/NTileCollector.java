@@ -62,10 +62,10 @@ class NTileCollector {
     }
 
     <T, R>
-    Collector<T, ?, Map<Integer, R>> ntile(int tiles,
-                                           Comparator<? super T> comparator,
-                                           Collector<? super T, ?, R> downstream) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, Map<Integer, R>> ntile(int tiles,
+                                                 Comparator<? super T> comparator,
+                                                 Collector<? super T, ?, R> downstream) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> ntileFinisher(list, tiles, comparator, downstream));

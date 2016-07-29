@@ -154,10 +154,10 @@ class RankingCollector {
     }
 
     <T, R>
-    Collector<T, ?, Map<R, Integer>> mapObjToRank(Function<? super T, R> mapper,
-                                                  Comparator<? super T> comparator,
-                                                  boolean denseRank) {
-        return Collector.of((Supplier<List<T>>) ArrayList::new,
+    Collector<T, List<T>, Map<R, Integer>> mapObjToRank(Function<? super T, R> mapper,
+                                                        Comparator<? super T> comparator,
+                                                        boolean denseRank) {
+        return Collector.of(ArrayList::new,
                 List::add,
                 CollectorEx::listCombiner,
                 (list) -> mapObjToRankFinisher(list, mapper, comparator, denseRank));

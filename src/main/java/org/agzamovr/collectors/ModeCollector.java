@@ -23,17 +23,13 @@ class ModeCollector {
     <T, D>
     void accumulator(Map<D, Long> map, T item, Function<? super T, D> mapper) {
         D result = mapper.apply(item);
-        map.merge(result, 1L, this::add);
+        map.merge(result, 1L, Math::addExact);
     }
 
     <D>
     Map<D, Long> combiner(Map<D, Long> left, Map<D, Long> right) {
-        right.forEach((item, count) -> left.merge(item, count, this::add));
+        right.forEach((item, count) -> left.merge(item, count, Math::addExact));
         return left;
-    }
-
-    Long add(Long a, Long b) {
-        return a + b;
     }
 
     <T>

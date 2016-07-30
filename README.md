@@ -121,7 +121,7 @@ System.out.println(result);
 //[1, 3, 6]
 ```
 Custom comparator and downstream collector can be passed as:
-```java7
+```java
 List<Integer> list = asList(1, 2, 3);
 Comparator<Integer> integerComparator = Integer::compareTo;
 

@@ -160,7 +160,7 @@ List<Map<Integer, Integer>> list = Arrays.asList(
         singletonMap(1, 1), singletonMap(1, -1),
         singletonMap(2, 2), singletonMap(2, -2));
 
-Map<Integer, List<Integer>> result = list.parallelStream().collect(CollectorEx.mapStreamToMultiValueMap());
+Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.mapStreamToMultiValueMap());
 
 System.out.println(result);
 //{0=[0], null=[null], 1=[1, -1], 2=[2, -2]}
@@ -172,7 +172,7 @@ List<Map<Integer, Integer>> list = Arrays.asList(
                 singletonMap(1, 1), singletonMap(1, -1),
                 singletonMap(2, 2), singletonMap(2, -2));
 
-Map<Integer, Long> result = list.parallelStream()
+Map<Integer, Long> result = list.stream()
         .collect(CollectorEx.mapStreamToMultiValueMap(Collectors.counting()));
 
 System.out.println(result);

@@ -13,7 +13,7 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DistinctCollectorTest {
+public class RankDistinctCollectorTest {
     private List<Bid> bidList = new ArrayList<>();
 
     @Before
@@ -28,7 +28,7 @@ public class DistinctCollectorTest {
     public void testDistinctWithEmptyList() {
         List<Integer> list = emptyList();
 
-        List<Integer> result = list.stream().collect(CollectorEx.distinct());
+        List<Integer> result = list.stream().collect(CollectorEx.rankDistinct());
 
         assertThat(result).isEmpty();
     }
@@ -37,7 +37,7 @@ public class DistinctCollectorTest {
     public void testDistinctWithIntegerList() {
         List<Integer> list = asList(1, 2, 2, 1, -1, null);
 
-        List<Integer> result = list.stream().collect(CollectorEx.distinct());
+        List<Integer> result = list.stream().collect(CollectorEx.rankDistinct());
 
         assertThat(result).containsExactly(-1, 1, 2, null);
     }
@@ -46,21 +46,21 @@ public class DistinctCollectorTest {
     public void testDistinctWithCustomMapper() {
         List<Integer> list = asList(1, -1, 2, -2, 3);
 
-        List<Integer> result = list.stream().collect(CollectorEx.distinct(i -> i * i));
+        List<Integer> result = list.stream().collect(CollectorEx.rankDistinct(i -> i * i));
 
         assertThat(result).containsExactly(1, 4, 9);
     }
 
     @Test
     public void testDistinctWithCustomComparator() {
-        List<Integer> result = bidList.stream().collect(CollectorEx.distinct(Bid::getNum));
+        List<Integer> result = bidList.stream().collect(CollectorEx.rankDistinct(Bid::getNum));
 
         assertThat(result).containsExactly(1);
     }
 
     @Test
     public void testDistinctWithCustomCollector() {
-        Set<Integer> result = bidList.stream().collect(CollectorEx.distinct(Bid::getNum, toSet()));
+        Set<Integer> result = bidList.stream().collect(CollectorEx.rankDistinct(Bid::getNum, toSet()));
 
         assertThat(result).containsExactly(1);
     }
@@ -70,7 +70,7 @@ public class DistinctCollectorTest {
         List<Integer> list = asList(1, -1, 2, -2, 3);
         Comparator<Integer> absComparator = (x, y) -> Integer.compare(Math.abs(x), Math.abs(y));
 
-        Set<Integer> result = list.stream().collect(CollectorEx.distinct(absComparator, toSet()));
+        Set<Integer> result = list.stream().collect(CollectorEx.rankDistinct(absComparator, toSet()));
 
         System.out.println(result);
     }

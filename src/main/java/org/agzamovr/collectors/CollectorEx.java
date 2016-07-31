@@ -8,10 +8,10 @@ import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
-import static org.agzamovr.collectors.DistinctCollector.DISTINCT_COLLECTOR;
 import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
 import static org.agzamovr.collectors.MultiValueMapCollector.MULTI_VALUE_MAP_COLLECTOR;
 import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
+import static org.agzamovr.collectors.RankDistinctCollector.RANK_DISTINCT_COLLECTOR;
 import static org.agzamovr.collectors.RankingCollector.RANKING_COLLECTOR;
 import static org.agzamovr.collectors.SummingBigDecimalCollector.SUMMING_BIG_DECIMAL_COLLECTOR;
 import static org.agzamovr.collectors.SummingDoubleCollector.SUMMING_DOUBLE_COLLECTOR;
@@ -247,48 +247,48 @@ public class CollectorEx {
     }
 
     public static <T extends Comparable<? super T>>
-    Collector<T, ?, List<T>> distinct() {
-        return DISTINCT_COLLECTOR.distinct();
+    Collector<T, ?, List<T>> rankDistinct() {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct();
     }
 
     public static <T>
-    Collector<T, ?, List<T>> distinct(Comparator<? super T> comparator) {
-        return DISTINCT_COLLECTOR.distinct(comparator);
+    Collector<T, ?, List<T>> rankDistinct(Comparator<? super T> comparator) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(comparator);
     }
 
     public static <T extends Comparable<? super T>, R>
-    Collector<T, ?, R> distinct(Collector<? super T, ?, R> downstream) {
-        return DISTINCT_COLLECTOR.distinct(downstream);
+    Collector<T, ?, R> rankDistinct(Collector<? super T, ?, R> downstream) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(downstream);
     }
 
     public static <T, D extends Comparable<? super D>>
-    Collector<T, ?, List<D>> distinct(Function<? super T, D> mapper) {
-        return DISTINCT_COLLECTOR.distinct(mapper);
+    Collector<T, ?, List<D>> rankDistinct(Function<? super T, D> mapper) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(mapper);
     }
 
     public static <T, R>
-    Collector<T, ?, R> distinct(Comparator<? super T> comparator,
-                                Collector<? super T, ?, R> downstream) {
-        return DISTINCT_COLLECTOR.distinct(comparator, downstream);
+    Collector<T, ?, R> rankDistinct(Comparator<? super T> comparator,
+                                    Collector<? super T, ?, R> downstream) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(comparator, downstream);
     }
 
     public static <T, D>
-    Collector<T, ?, List<D>> distinct(Comparator<? super D> comparator,
-                                      Function<? super T, D> mapper) {
-        return DISTINCT_COLLECTOR.distinct(comparator, mapper);
+    Collector<T, ?, List<D>> rankDistinct(Comparator<? super D> comparator,
+                                          Function<? super T, D> mapper) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(comparator, mapper);
     }
 
     public static <T, D extends Comparable<? super D>, R>
-    Collector<T, ?, R> distinct(Function<? super T, D> mapper,
-                                Collector<? super D, ?, R> downstream) {
-        return DISTINCT_COLLECTOR.distinct(mapper, downstream);
+    Collector<T, ?, R> rankDistinct(Function<? super T, D> mapper,
+                                    Collector<? super D, ?, R> downstream) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(mapper, downstream);
     }
 
     public static <T, D, R>
-    Collector<T, ?, R> distinct(Comparator<? super D> comparator,
-                                Function<? super T, D> mapper,
-                                Collector<? super D, ?, R> downstream) {
-        return DISTINCT_COLLECTOR.distinct(comparator, mapper, downstream);
+    Collector<T, ?, R> rankDistinct(Comparator<? super D> comparator,
+                                    Function<? super T, D> mapper,
+                                    Collector<? super D, ?, R> downstream) {
+        return RANK_DISTINCT_COLLECTOR.rankDistinct(comparator, mapper, downstream);
     }
 
     public static <T, V>

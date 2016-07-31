@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
         SummingBigDecimalCollectorTest.class,
         NTileCollectorTest.class,
         ModeCollectorTest.class,
-        DistinctCollectorTest.class,
+        RankDistinctCollectorTest.class,
         MultiValueMapCollectorTest.class})
 public class AllTestSuite {
 }

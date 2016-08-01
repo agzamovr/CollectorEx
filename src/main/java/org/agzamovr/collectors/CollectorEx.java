@@ -8,6 +8,7 @@ import java.util.function.ToIntFunction;
 import java.util.function.ToLongFunction;
 import java.util.stream.Collector;
 
+import static org.agzamovr.collectors.DistinctCollector.DISTINCT_COLLECTOR;
 import static org.agzamovr.collectors.ModeCollector.MODE_COLLECTOR;
 import static org.agzamovr.collectors.MultiValueMapCollector.MULTI_VALUE_MAP_COLLECTOR;
 import static org.agzamovr.collectors.NTileCollector.N_TILE_COLLECTOR;
@@ -289,6 +290,17 @@ public class CollectorEx {
                                     Function<? super T, D> mapper,
                                     Collector<? super D, ?, R> downstream) {
         return RANK_DISTINCT_COLLECTOR.rankDistinct(comparator, mapper, downstream);
+    }
+
+    public static <T, D>
+    Collector<T, ?, Collection<T>> distinct(Function<? super T, D> mapper) {
+        return DISTINCT_COLLECTOR.distinct(mapper);
+    }
+
+    public static <T, D, R>
+    Collector<T, ?, R> distinct(Function<? super T, D> mapper,
+                                Collector<? super T, ?, R> downstream) {
+        return DISTINCT_COLLECTOR.distinct(mapper, downstream);
     }
 
     public static <T, V>

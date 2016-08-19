@@ -93,22 +93,12 @@ System.out.println(result);
 ```
 Custom collector can be passed as downstream collector:
 ```java
-List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null);
+List<Integer> list = Arrays.asList(-1, -2, 2, 1, 1);
 
-List<Integer> result = list.stream().collect(CollectorEx.distinct(Function.identity(), Collectors.toList()));
-
-System.out.println(result);
-// [-1, null, 1, 2]
-```
-Custom comparator and downstream collector can be passed as:
-```java
-List<Integer> list = asList(1, -1, 2, -2, 3);
-Comparator<Integer> absComparator = (x, y) -> Integer.compare(Math.abs(x), Math.abs(y));
-
-Set<Integer> result = list.stream().collect(CollectorEx.distinct(absComparator, Collectors.toSet()));
+List<Integer> result = list.stream().collect(CollectorEx.distinct(Math::abs, Collectors.toList()));
 
 System.out.println(result);
-//[1, 2, 3]
+// [1, 2]
 ```
 ###<a name="summing">Summing collectors</a>
 Summing collectors are returns cumulative sum for each stream element in a given order. There are four types of this collector for int, long, double and BigDecimal types. Example:

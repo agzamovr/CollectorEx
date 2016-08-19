@@ -82,23 +82,23 @@ System.out.println(result);
 // {1=[1, 2], 2=[null, 3]}
 ```
 ###<a name="distinct">Distinct collector</a>
-Distinct collector return distinct elements of stream using given comparator. If objects are implements Comparable interface then comparator may be omitted. Internally it uses rank collector and takes first element for each rank. Because rank collector sort elements ditinct collector doesn't preserve original order of stream elements.
+Distinct collector return distinct elements of stream using given mapper function.
 ```java
-List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null, null);
+List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null);
 
-List<Integer> result = list.stream().collect(CollectorEx.distinct());
+Collection<Integer> result = list.stream().collect(CollectorEx.distinct(Function.identity()));
 
 System.out.println(result);
-//[-1, 1, 2, null]
+//[-1, null, 1, 2]
 ```
-Custom mapping function can be passed to collector to apply for stream elements:
+Custom collector can be passed as downstream collector:
 ```java
-List<Integer> list = Arrays.asList(1, -1, 2, -2, 3);
+List<Integer> list = Arrays.asList(1, 2, 2, 1, -1, null);
 
-List<Integer> result = list.stream().collect(CollectorEx.distinct(i ->  i * i));
+List<Integer> result = list.stream().collect(CollectorEx.distinct(Function.identity(), Collectors.toList()));
 
 System.out.println(result);
-// [1, 4, 9]
+// [-1, null, 1, 2]
 ```
 Custom comparator and downstream collector can be passed as:
 ```java

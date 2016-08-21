@@ -893,6 +893,44 @@ public class CollectorEx {
         return MULTI_VALUE_MAP_COLLECTOR.entryStreamToMultiValueMap(downstream);
     }
 
+    /**
+     * Collects stream elements into multi-value map whose keys and values are the result of applying
+     * the provided mapping functions to the input elements.
+     *
+     * @param keyMapper   a mapping function to produce keys
+     * @param valueMapper a mapping function to produce values
+     * @param <T>         the type of stream elements
+     * @param <K>         the output type of the key mapping function
+     * @param <V>         the output type of the value mapping function
+     * @param <R>         the result type of the reduction operation
+     * @return the map with collection of values for the same key entries
+     */
+    public static <T, K, V, R>
+    Collector<T, ?, Map<K, List<V>>> toMultiValueMap(Function<? super T, ? extends K> keyMapper,
+                                                     Function<? super T, ? extends V> valueMapper) {
+        return MULTI_VALUE_MAP_COLLECTOR.toMultiValueMap(keyMapper, valueMapper);
+    }
+
+    /**
+     * Collects stream elements into multi-value map whose keys and values are the result of applying
+     * the provided mapping functions to the input elements.
+     *
+     * @param keyMapper   a mapping function to produce keys
+     * @param valueMapper a mapping function to produce values
+     * @param downstream  the reduction operation (e.g. the downstream collector)
+     * @param <T>         the type of stream elements
+     * @param <K>         the output type of the key mapping function
+     * @param <V>         the output type of the value mapping function
+     * @param <R>         the result type of the reduction operation
+     * @return the map with collection of values for the same key entries
+     */
+    public static <T, K, V, R>
+    Collector<T, ?, Map<K, R>> toMultiValueMap(Function<? super T, ? extends K> keyMapper,
+                                               Function<? super T, ? extends V> valueMapper,
+                                               Collector<? super V, ?, R> downstream) {
+        return MULTI_VALUE_MAP_COLLECTOR.toMultiValueMap(keyMapper, valueMapper, downstream);
+    }
+
     static <T> List<T> listCombiner(List<T> left, List<T> right) {
         left.addAll(right);
         return left;

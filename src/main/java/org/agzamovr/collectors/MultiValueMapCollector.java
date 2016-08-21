@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
 
@@ -22,11 +24,6 @@ public class MultiValueMapCollector {
     <T, V>
     void accumulator(Map<T, List<V>> map, Map<T, V> item) {
         item.forEach((key, value) -> map.computeIfAbsent(key, k -> new ArrayList<>()).add(value));
-    }
-
-    <T, V>
-    void accumulator(Map<T, List<V>> map, Entry<T, V> item) {
-        map.computeIfAbsent(item.getKey(), k -> new ArrayList<>()).add(item.getValue());
     }
 
     <T, V>
@@ -53,16 +50,43 @@ public class MultiValueMapCollector {
 
     <T, V>
     Collector<Entry<T, V>, ?, Map<T, List<V>>> entryStreamToMultiValueMap() {
-        return Collector.of(HashMap::new,
-                this::accumulator,
-                this::combiner,
-                Characteristics.IDENTITY_FINISH);
+        return toMultiValueMap(Entry::getKey, Entry::getValue);
     }
 
     <T, V, R>
     Collector<Entry<T, V>, Map<T, List<V>>, Map<T, R>> entryStreamToMultiValueMap(Collector<? super V, ?, R> downstream) {
+        return toMultiValueMap(Entry::getKey, Entry::getValue, downstream);
+    }
+
+    <T, K, V>
+    Collector<T, Map<K, List<V>>, Map<K, List<V>>> toMultiValueMap(Function<? super T, ? extends K> keyMapper,
+                                                                   Function<? super T, ? extends V> valueMapper) {
+        BiConsumer<Map<K, List<V>>, T> accumulator
+                = (map, element) -> {
+            K key = keyMapper.apply(element);
+            V value = valueMapper.apply(element);
+            List<V> list = map.computeIfAbsent(key, k -> new ArrayList<>());
+            list.add(value);
+        };
         return Collector.of(HashMap::new,
-                this::accumulator,
+                accumulator,
+                this::combiner,
+                Characteristics.IDENTITY_FINISH);
+    }
+
+    <T, K, V, R>
+    Collector<T, Map<K, List<V>>, Map<K, R>> toMultiValueMap(Function<? super T, ? extends K> keyMapper,
+                                                             Function<? super T, ? extends V> valueMapper,
+                                                             Collector<? super V, ?, R> downstream) {
+        BiConsumer<Map<K, List<V>>, T> accumulator
+                = (map, element) -> {
+            K key = keyMapper.apply(element);
+            V value = valueMapper.apply(element);
+            List<V> list = map.computeIfAbsent(key, k -> new ArrayList<>());
+            list.add(value);
+        };
+        return Collector.of(HashMap::new,
+                accumulator,
                 this::combiner,
                 (map) -> multiValueMapFinisher(map, downstream));
     }

@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collector.Characteristics;
 
-public class MultiValueMapCollector {
+class MultiValueMapCollector {
     static final MultiValueMapCollector MULTI_VALUE_MAP_COLLECTOR = new MultiValueMapCollector();
 
     <T, V, R>

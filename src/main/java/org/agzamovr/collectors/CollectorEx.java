@@ -47,11 +47,11 @@ public class CollectorEx {
      * Computes the rank of object using natural ordering. The ranks are consecutive integers beginning with 1.
      * The largest rank value is the number of unique objects. Rank values are not skipped in the event of ties.
      * Equal objects for the ranking criteria receive the same rank. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     SortedMap<Integer, List<Integer>> denseRankedMap = list.stream().collect(CollectorEx.denseRank());
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1, 1], 3=[2, 2], 5=[3, 3], 7=[4, 4]}}.
      *
      * @param <T> the type of stream objects
@@ -66,12 +66,12 @@ public class CollectorEx {
      * Computes the rank of object using given comparator. The ranks are consecutive integers beginning with 1.
      * The largest rank value is the number of unique objects. Rank values are not skipped in the event of ties.
      * Equal objects for the ranking criteria receive the same rank. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> denseRankedMap = list.stream().collect(CollectorEx.denseRank(intComparator.reverse()));
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[4, 4], 2=[3, 3], 3=[2, 2], 4=[1, 1]}}.
      *
      * @param comparator the comparator for custom ordering
@@ -88,11 +88,11 @@ public class CollectorEx {
      * The ranks are consecutive integers beginning with 1. The largest rank value is the number of unique objects.
      * Rank values are not skipped in the event of ties. Equal objects for the ranking criteria receive the same rank.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     SortedMap<Integer, Set<Integer>> denseRankedMap = list.stream().collect(CollectorEx.denseRank(toSet()));
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1], 2=[2], 3=[3], 4=[4]}}.
      *
      * @param downstream the reduction operation (e.g. the downstream collector)
@@ -110,13 +110,13 @@ public class CollectorEx {
      * <b>sorted by according to given second comparator</b>. The largest rank value is the number of unique objects.
      * Rank values are not skipped in the event of ties. Equal objects for the ranking criteria receive the same rank.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> denseRankedMap = list.stream()
      *                                          .collect(CollectorEx.denseRank(intComparator, intComparator.reverse()));
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {4=[4, 4], 3=[3, 3], 2=[2, 2], 1=[1, 1]}}.
      *
      * @param comparator the comparator for custom ordering
@@ -134,11 +134,11 @@ public class CollectorEx {
      * Computes the rank of object using natural ordering. Equal objects for the ranking criteria
      * receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be
      * consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect(CollectorEx.rank());
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1, 1], 3=[2, 2], 5=[3, 3], 7=[4, 4]}}.
      *
      * @param <T> the type of stream objects
@@ -153,12 +153,12 @@ public class CollectorEx {
      * Computes the rank of object using given comparator. Equal objects for the ranking criteria
      * receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be
      * consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect(CollectorEx.rank(intComparator.reversed()));
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[4, 4], 3=[3, 3], 5=[2, 2], 7=[1, 1]}}.
      *
      * @param comparator the comparator for custom ordering
@@ -174,12 +174,12 @@ public class CollectorEx {
      * Computes the rank of object using given comparator. Equal objects for the ranking criteria
      * receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be
      * consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> rankedMap = list.stream().collect(CollectorEx.rank(intComparator.reversed()));
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[4, 4], 3=[3, 3], 5=[2, 2], 7=[1, 1]}}.
      *
      * @param downstream the reduction operation (e.g. the downstream collector)
@@ -196,13 +196,13 @@ public class CollectorEx {
      * Computes the rank of object using given comparator and sorts ranks according the second comparator.
      * Equal objects for the ranking criteria receive the same rank. Number of tied rows added to
      * the next rank. Therefore, the ranks may not be consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> rankedMap = list.stream()
      *                          .collect(CollectorEx.rank(intComparator, intComparator.reversed()));
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {7=[4, 4], 5=[3, 3], 3=[2, 2], 1=[1, 1]}}.
      *
      * @param comparator the comparator for custom ordering
@@ -220,13 +220,13 @@ public class CollectorEx {
      * Returns {@link SortedMap} with ranks as keys and result of applied reduction operation as values.
      * Equal objects for the ranking criteria receive the same rank. Number of tied rows added to
      * the next rank. Therefore, the ranks may not be consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3, 4, 4, 3, 2, 1);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     SortedMap<Integer, List<Integer>> rankedMap = list.stream()
      *                          .collect(CollectorEx.rank(intComparator, intComparator.reversed()));
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {7=[4, 4], 5=[3, 3], 3=[2, 2], 1=[1, 1]}}.
      *
      * @param comparator the comparator for custom ordering
@@ -247,11 +247,11 @@ public class CollectorEx {
      * Maps stream of objects to the computed rank using natural ordering. The ranks are consecutive integers
      * beginning with 1. The largest rank value is the number of unique objects. Rank values are not skipped
      * in the event of ties. Equal objects for the ranking criteria receive the same rank. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, -2, -3, -4, -4, -3, -2, -1);
      *     Map<Integer, Integer> denseRankedMap = list.stream().collect(CollectorEx.mapObjToDenseRank());
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {-1=4, -2=3, -3=2, -4=1}}.
      *
      * @param <T> the type of stream objects
@@ -266,11 +266,11 @@ public class CollectorEx {
      * Maps stream of objects to the computed rank using given comparator. The ranks are consecutive integers
      * beginning with 1. The largest rank value is the number of unique objects. Rank values are not skipped
      * in the event of ties. Equal objects for the ranking criteria receive the same rank. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, -2, -3, -4, -4, -3, -2, -1);
      *     Map<Integer, Integer> denseRankedMap = list.stream().collect(CollectorEx.mapObjToDenseRank());
      *     System.out.println(denseRankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {-1=4, -2=3, -3=2, -4=1}}.
      *
      * @param comparator the comparator for custom ordering
@@ -300,11 +300,11 @@ public class CollectorEx {
      * Maps stream of objects to the computed rank using natural ordering. Equal objects for the ranking criteria
      * receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be
      * consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, -2, -3, -4, -4, -3, -2, -1);
      *     Map<Integer, Integer> rankedMap = list.stream().collect(CollectorEx.mapObjToRank());
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {-1=7, -2=5, -3=3, -4=1}}.
      *
      * @param <T> the type of stream objects
@@ -319,11 +319,11 @@ public class CollectorEx {
      * Maps stream of objects to the computed rank using given comparator. Equal objects for the ranking criteria
      * receive the same rank. Number of tied rows added to the next rank. Therefore, the ranks may not be
      * consecutive numbers. Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, -2, -3, -4, -4, -3, -2, -1);
      *     Map<Integer, Integer> rankedMap = list.stream().collect(CollectorEx.mapObjToRank());
      *     System.out.println(rankedMap);
-     * </pre>
+     * }</pre>
      * This will prints {@code {-1=7, -2=5, -3=3, -4=1}}.
      *
      * @param comparator the comparator for custom ordering
@@ -367,11 +367,11 @@ public class CollectorEx {
     /**
      * Returns the cumulative sum of ints for each stream element using natural ordering.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3);
      *     List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [1, 3, 6]}.
      *
      * @param mapper the mapper
@@ -386,11 +386,11 @@ public class CollectorEx {
     /**
      * Returns the cumulative sum of ints for each stream element using natural ordering.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3);
      *     List<Integer> result = list.stream().collect(CollectorEx.summingInt(i -> i));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [1, 3, 6]}.
      *
      * @param mapper     the mapper
@@ -407,13 +407,13 @@ public class CollectorEx {
     /**
      * Returns the cumulative sum of ints for each stream element using given comparator.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     List<Integer> result = list.stream()
      *                  .collect(CollectorEx.summingInt(i -> i, intComparator.reversed()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [3, 5, 6]}.
      *
      * @param mapper     the mapper
@@ -430,13 +430,13 @@ public class CollectorEx {
     /**
      * Returns the cumulative sum of ints for each stream element using given comparator and downstream collector.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 2, 3);
      *     Comparator<Integer> intComparator = Integer::compare;
      *     Set<Integer> result = list.stream()
      *                      .collect(CollectorEx.summingInt(i -> i, intComparator.reversed(), Collectors.toSet()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [3, 5, 6]}.
      *
      * @param mapper     the mapper
@@ -575,11 +575,11 @@ public class CollectorEx {
     /**
      * Returns set of elements which appears most often in a stream.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 3, 6, 6, 6, 6, 7, 7, 12, 12, 17);
      *     Set<Integer> result = list.stream().collect(CollectorEx.mode());
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [6]}
      *
      * @param <T> the type of stream objects
@@ -594,11 +594,11 @@ public class CollectorEx {
      * Applies given <code>mapper function</code> to elements of stream and returns set of elements which
      * resulting values appears most often in a stream.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
      *     Set<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [1, 2]}
      *
      * @param <T> the type of stream objects
@@ -612,11 +612,11 @@ public class CollectorEx {
     /**
      * Returns collection of elements which appears most often in a stream.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, 3, 6, 6, 6, 6, 7, 7, 12, 12, 17);
      *     List<Integer> result = list.stream().collect(CollectorEx.mode(Collectors.toList()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [6]}
      *
      * @param downstream the reduction operation (e.g. the downstream collector)
@@ -632,11 +632,11 @@ public class CollectorEx {
      * Applies given <code>mapper function</code> to elements of stream and returns collection of elements which
      * resulting values appears most often in a stream.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(1, -1, 2, -2, 3, 4);
      *     List<Integer> result = list.stream().collect(CollectorEx.mode(Math::abs, Collectors.toList()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [1, 2]}
      *
      * @param downstream the reduction operation (e.g. the downstream collector)
@@ -652,11 +652,11 @@ public class CollectorEx {
     /**
      * Divides stream of objects into a number of buckets using natural ordering.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1, 1, 2], 2=[3, null, null]}}
      *
      * @param tiles number of tiles
@@ -671,12 +671,12 @@ public class CollectorEx {
     /**
      * Divides stream of objects into a number of buckets using given comparator.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
      *     Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[null, null, 1], 2=[1, 2, 3]}}
      *
      * @param tiles      number of tiles
@@ -693,11 +693,11 @@ public class CollectorEx {
     /**
      * Divides stream of objects into a number of buckets using natural ordering and given downstream collector.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1, 2], 2=[null, 3]}}
      *
      * @param tiles      number of tiles
@@ -714,12 +714,12 @@ public class CollectorEx {
     /**
      * Divides stream of objects into a number of buckets using given comparator and downstream collector.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
      *     Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator.reversed(), Collectors.toSet()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {1=[1, 2, 3], 2=[null, 1]}}
      *
      * @param tiles      number of tiles
@@ -783,11 +783,11 @@ public class CollectorEx {
     /**
      * Return distinct elements of stream using given mapper function.
      * Example:
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, 2, 2, 1, 1);
      *     Collection<Integer> result = list.stream().collect(CollectorEx.distinct(Math::abs));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code [1, 2]}
      *
      * @param mapper the mapping function
@@ -802,11 +802,11 @@ public class CollectorEx {
 
     /**
      * Return distinct elements of stream using given mapper function
-     * <pre>
+     * <pre>{@code
      *     List<Integer> list = Arrays.asList(-1, 2, 2, 1, 1);
      *     List<Integer> result = list.stream().collect(CollectorEx.distinct(Math::abs, Collectors.toList()));
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      *
      * @param mapper     the mapping function
      * @param downstream the reduction operation (e.g. the downstream collector)
@@ -824,15 +824,14 @@ public class CollectorEx {
     /**
      * Collects stream of {@link Map map's} to multi value map.
      * Example:
-     * <pre>
-     *
+     * <pre>{@code
      *     List<Map<Integer, Integer>> list = Arrays.asList(
      *                             singletonMap(null, null), singletonMap(0, 0),
      *                             singletonMap(1, 1), singletonMap(1, -1),
      *                             singletonMap(2, 2), singletonMap(2, -2));
      *     Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.mapStreamToMultiValueMap());
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {0=[0], null=[null], 1=[1, -1], 2=[2, -2]}}.
      *
      * @param <K> the type of map keys
@@ -847,15 +846,14 @@ public class CollectorEx {
     /**
      * Collects stream of {@link Map map's} to multi value map using given downstream collector.
      * Example:
-     * <pre>
-     *
+     * <pre>{@code
      *     List<Map<Integer, Integer>> list = Arrays.asList(
      *                             singletonMap(null, null), singletonMap(0, 0),
      *                             singletonMap(1, 1), singletonMap(1, -1),
      *                             singletonMap(2, 2), singletonMap(2, -2));
      *     Map<Integer, List<Integer>> result = list.stream().collect(Collectors.counting());
      *     System.out.println(result);
-     * </pre>
+     * }</pre>
      * This will prints {@code {0=1, null=1, 1=2, 2=2}}.
      *
      * @param downstream the reduction operation (e.g. the downstream collector)

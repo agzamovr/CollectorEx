@@ -54,32 +54,33 @@ System.out.println(rankedMap);
 // {7=[4], 5=[3], 3=[2], 1=[1]}
 ```
 ###<a name="ntile">NTile collector</a>
-NTile collector divides stream of objects into a number of buckets using given comparator. If objects are implements Comparable interface then comparator may be omitted. Default collector returns map with tile number as a key and list of objects as a value for corresponding number.
+NTile collector divides stream of objects into a number of buckets using given comparator. If objects are implements Comparable interface then comparator may be omitted. Default collector returns list which indexes corresponds to tile number with collection of objects as values for each tile.
 ```java
 List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 
-Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
+List<List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
 
 System.out.println(result);
-// {1=[1, 1, 2], 2=[3, null, null]}
+// [[1, 1, 2], [3, null, null]]
 ```
 Custom comparator may be provided for sorting. Here is example of custom comparator which puts nulls before non null values:
 ```java
 List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
 
-Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
+List<List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
 
 System.out.println(result);
-// {1=[null, null, 1], 2=[1, 2, 3]}
+// [[null, null, 1], [1, 2, 3]]
 ```
 Custom collector can be passed as downstream collector:
 ```java
 List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
 
-Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
+List<Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
+
 System.out.println(result);
-// {1=[1, 2], 2=[null, 3]}
+// [[1, 2], [null, 3]]
 ```
 ###<a name="distinct">Distinct collector</a>
 Distinct collector return distinct elements of stream using given mapper function.

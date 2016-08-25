@@ -654,17 +654,17 @@ public class CollectorEx {
      * Example:
      * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
-     *     Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
+     *     List<List<Integer>> result = list.stream().collect(CollectorEx.ntile(2));
      *     System.out.println(result);
      * }</pre>
-     * This will prints {@code {1=[1, 1, 2], 2=[3, null, null]}}
+     * This will prints {@code [[1, 1, 2], [3, null, null]]}
      *
      * @param tiles number of tiles
      * @param <T>   the type of stream objects
-     * @return {@link Map} with tile indexes as keys and collection of objects as values
+     * @return {@link List} which indexes corresponds to tile number with collection of objects as values for each tile
      */
     public static <T extends Comparable<? super T>>
-    Collector<T, ?, Map<Integer, List<T>>> ntile(int tiles) {
+    Collector<T, ?, List<List<T>>> ntile(int tiles) {
         return N_TILE_COLLECTOR.ntile(tiles);
     }
 
@@ -674,19 +674,19 @@ public class CollectorEx {
      * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
-     *     Map<Integer, List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
+     *     List<List<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator));
      *     System.out.println(result);
      * }</pre>
-     * This will prints {@code {1=[null, null, 1], 2=[1, 2, 3]}}
+     * This will prints {@code [[null, null, 1], [1, 2, 3]]}
      *
      * @param tiles      number of tiles
      * @param comparator the comparator for custom ordering
      * @param <T>        the type of stream objects
-     * @return {@link Map} with tile indexes as keys and collection of objects as values
+     * @return {@link List} which indexes corresponds to tile number with collection of objects as values for each tile
      */
     public static <T>
-    Collector<T, ?, Map<Integer, List<T>>> ntile(int tiles,
-                                                 Comparator<? super T> comparator) {
+    Collector<T, ?, List<List<T>>> ntile(int tiles,
+                                         Comparator<? super T> comparator) {
         return N_TILE_COLLECTOR.ntile(tiles, comparator);
     }
 
@@ -695,19 +695,19 @@ public class CollectorEx {
      * Example:
      * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
-     *     Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
+     *     List<Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, Collectors.toSet()));
      *     System.out.println(result);
      * }</pre>
-     * This will prints {@code {1=[1, 2], 2=[null, 3]}}
+     * This will prints {@code [[1, 2], [null, 3]]}
      *
      * @param tiles      number of tiles
      * @param downstream the reduction operation (e.g. the downstream collector)
      * @param <T>        the type of stream objects
-     * @return {@link Map} with tile indexes as keys and collection of objects as values
+     * @return {@link List} which indexes corresponds to tile number with collection of objects as values for each tile
      */
     public static <T extends Comparable<? super T>, R>
-    Collector<T, ?, Map<Integer, R>> ntile(int tiles,
-                                           Collector<? super T, ?, R> downstream) {
+    Collector<T, ?, List<R>> ntile(int tiles,
+                                   Collector<? super T, ?, R> downstream) {
         return N_TILE_COLLECTOR.ntile(tiles, downstream);
     }
 
@@ -717,21 +717,21 @@ public class CollectorEx {
      * <pre>{@code
      *     List<Integer> list = Arrays.asList(null, 1, 1, 2, 3, null);
      *     Comparator<Integer> integerComparator = Comparator.nullsFirst(Integer::compareTo);
-     *     Map<Integer, Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator.reversed(), Collectors.toSet()));
+     *     List<Set<Integer>> result = list.stream().collect(CollectorEx.ntile(2, integerComparator.reversed(), Collectors.toSet()));
      *     System.out.println(result);
      * }</pre>
-     * This will prints {@code {1=[1, 2, 3], 2=[null, 1]}}
+     * This will prints {@code [[1, 2, 3], [null, 1]]}
      *
      * @param tiles      number of tiles
      * @param comparator the comparator for custom ordering
      * @param downstream the reduction operation (e.g. the downstream collector)
      * @param <T>        the type of stream objects
-     * @return {@link Map} with tile indexes as keys and collection of objects as values
+     * @return {@link List} which indexes corresponds to tile number with collection of objects as values for each tile
      */
     public static <T, R>
-    Collector<T, ?, Map<Integer, R>> ntile(int tiles,
-                                           Comparator<? super T> comparator,
-                                           Collector<? super T, ?, R> downstream) {
+    Collector<T, ?, List<R>> ntile(int tiles,
+                                   Comparator<? super T> comparator,
+                                   Collector<? super T, ?, R> downstream) {
         return N_TILE_COLLECTOR.ntile(tiles, comparator, downstream);
     }
 

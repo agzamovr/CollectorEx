@@ -1,6 +1,19 @@
 # CollectorEx
 This library provides new coolectors for using with java 8 streams. Some collectors are provide similar functionality like SQL window functions.
-
+###Install
+Add to project via Maven:
+```xml
+<dependency>
+  <groupId>com.github.agzamovr</groupId>
+  <artifactId>collectorex</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+or Gradle:
+```groovy
+compile 'com.github.agzamovr:collectorex:0.1'
+```
+##Getting started
 1. [Rank collector](#rank)
 2. [NTile collector](#ntile)
 3. [Distinct collector](#distinct)

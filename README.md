@@ -101,6 +101,31 @@ List<Integer> result = list.stream().collect(CollectorEx.distinct(Math::abs, Col
 System.out.println(result);
 // [1, 2]
 ```
+If you need to distinguish elements by more than one property you may use <b>rankCollector</b>. In the following example there is list of maps. Each map contains two entries with keys email and name. We use comparator to distinguish maps by this two keys:
+```java
+List<Map<String, String>> mapList = new ArrayList<>();
+Map<String, String> map = new HashMap<>();
+map.put("email", "some@email.com");
+map.put("name", "John");
+mapList.add(map);
+map = new HashMap<>();
+map.put("email", "some@email.com");
+map.put("name", "Rob");
+mapList.add(map);
+map = new HashMap<>();
+map.put("email", "some@email.com");
+map.put("name", "Rob");
+mapList.add(map);
+Comparator<Map<String, String>> distinctComparator =
+        comparing((Map<String, String> m) -> m.get("email"))
+                .thenComparing(m -> m.get("name"));
+List<Map<String, String>> bidAuthorsInfo = mapList.stream()
+        .collect(CollectorEx.rankDistinct(distinctComparator));
+bidAuthorsInfo.forEach(System.out::println);
+//{name=John, email=some@email.com}
+//{name=Rob, email=some@email.com}
+```
+Rank distinct collector uses [rank collector](#rank) internally and selects distinct elements by their calculated ranks.
 ###<a name="summing">Summing collectors</a>
 Summing collectors are returns cumulative sum for each stream element in a given order. There are four types of this collector for int, long, double and BigDecimal types. Example:
 ```java

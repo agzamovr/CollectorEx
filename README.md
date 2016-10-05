@@ -1,5 +1,5 @@
 # CollectorEx
-This library provides new coolectors for using with java 8 streams. Some collectors are provide similar functionality like SQL window functions.
+This library provides new collectors for using with java 8 streams. Some collectors are provide similar functionality like SQL window functions.
 ###Install
 Add to project via Maven:
 ```xml
